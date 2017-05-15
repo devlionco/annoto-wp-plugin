@@ -35,13 +35,10 @@ register_activation_hook( __FILE__, array( Annoto::class, 'plugin_activation' ) 
 register_deactivation_hook( __FILE__, array( Annoto::class, 'plugin_deactivation' ) );
 
 require_once( ANNOTO_PLUGIN_DIR . 'class.annoto.php' );
-require_once( ANNOTO_PLUGIN_DIR . 'class.annoto-admin.php' );
 
-//require_once( AKISMET__PLUGIN_DIR . 'class.annoto-widget.php' );
 
-//add_action( 'init', array( 'Annoto', 'init' ) );
 
 if ( is_admin() ) {
-    add_action( 'init', array( Annoto_Admin::class, 'init' ) );
+    require_once( ANNOTO_PLUGIN_DIR . 'class.annoto-admin.php' );
+    add_action( 'init', [ AnnotoAdmin::class, 'init' ] );
 }
-
