@@ -1,4 +1,4 @@
-div#annoto-bootstrap {
+div.annoto-bootstrap {
     margin-top: 16px;
 }
 
@@ -59,7 +59,7 @@ input:checked + .annoto-slider:before {
 }
 
 .annoto-dropdown-button {
-    width:12em;
+    width: 12em;
     text-align: left !important;
 }
 
@@ -70,7 +70,7 @@ input:checked + .annoto-slider:before {
 .annoto-notification {
     position: fixed;
     top: 32px;
-    right: 0em;
+    right: 0;
     z-index: 99999;
 }
 
@@ -92,23 +92,39 @@ input:checked + .annoto-slider:before {
 }
 
 .onoffswitch {
-    position: relative; width: 90px;
-    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    position: relative;
+    width: 90px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 .onoffswitch-checkbox {
     display: none;
 }
 .onoffswitch-label {
-    display: block; overflow: hidden; cursor: pointer;
-    border: 2px solid #999999; border-radius: 0px;
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid #999999;
+    border-radius: 0;
 }
 .onoffswitch-inner {
-    display: block; width: 200%; margin-left: -100%;
+    display: block;
+    width: 200%;
+    margin-left: -100%;
     transition: margin 0.3s ease-in 0s;
 }
 .onoffswitch-inner:before, .onoffswitch-inner:after {
-    display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 26px;
-    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    display: block;
+    float: left;
+    width: 50%;
+    height: 30px;
+    padding: 0;
+    line-height: 26px;
+    font-size: 14px;
+    color: white;
+    font-family: Trebuchet, Arial, sans-serif;
+    font-weight: bold;
     box-sizing: border-box;
     border: 2px solid transparent;
     background-clip: padding-box;
@@ -116,18 +132,24 @@ input:checked + .annoto-slider:before {
 .onoffswitch-inner:before {
     content: "ON";
     padding-left: 10px;
-    background-color: #EEEEEE; color: #666666;
+    background-color: #EEEEEE;
+    color: #666666;
 }
 .onoffswitch-inner:after {
     content: "OFF";
     padding-right: 10px;
-    background-color: #EEEEEE; color: #999999;
+    background-color: #EEEEEE;
+    color: #999999;
     text-align: right;
 }
 .onoffswitch-switch {
-    display: block; width: 39px; margin: 0px;
+    display: block;
+    width: 39px;
+    margin: 0;
     background: #A1A1A1;
-    position: absolute; top: 0; bottom: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
     right: 51px;
     transition: all 0.3s ease-in 0s;
 }
@@ -135,7 +157,7 @@ input:checked + .annoto-slider:before {
     margin-left: 0;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-    right: 0px;
+    right: 0;
     background-color: #337ab7;
 }
 

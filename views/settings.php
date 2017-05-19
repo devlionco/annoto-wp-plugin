@@ -1,4 +1,4 @@
-<div id="annoto-bootstrap">
+<div id="annoto-bootstrap" class="annoto-bootstrap">
     <div class="text-center annoto-notification">
         <div class="alert alert-success text-left display-none" id="successMessage" role="alert">
             <div class="notification-header"><strong>Success!</strong></div>
@@ -13,11 +13,20 @@
             <span> Error message </span>
         </div>
     </div>
-    <input type="hidden" name="settings-from-server" id="settingsFromServer" value='<?php echo json_encode(get_option('annoto_settings')); ?>'>
+    <input
+        type="hidden"
+        name="settings-from-server"
+        id="settingsFromServer"
+        value='<?php echo json_encode(get_option('annoto_settings')); ?>'
+    >
     <div class="col-sm-push-2 col-sm-8">
         <div class="panel panel-primary">
             <div class="panel-heading text-center">
-                <img class="annoto-masthead_logo" src="<?php echo esc_url( plugins_url( '../src/img/annoto-logo.png', __FILE__ ) ); ?>" alt="Annoto" />
+                <img
+                    class="annoto-masthead_logo"
+                    src="<?php echo esc_url( plugins_url( '../src/img/annoto-logo.png', __FILE__ ) ); ?>"
+                    alt="Annoto"
+                />
             </div>
             <div class="panel-body">
                 <form class="form-horizontal" id="settingForm" method="post" action="">
@@ -29,7 +38,12 @@
                                         <label class="control-label col-sm-3" for="sso-support">SSO Support</label>
                                         <div class="col-sm-9">
                                             <label class="annoto-switch">
-                                                <input class="setting-data" type="checkbox" name="sso-support" id="sso-support">
+                                                <input
+                                                    class="setting-data"
+                                                    type="checkbox"
+                                                    name="sso-support"
+                                                    id="sso-support"
+                                                >
                                                 <div class="annoto-slider round"></div>
                                             </label>
                                         </div>
@@ -38,28 +52,35 @@
                                         <label class="control-label col-sm-3" for="demo-mode">Demo Mode</label>
                                         <div class="col-sm-9">
                                             <label class="annoto-switch">
-                                                <input type="checkbox" class="setting-data" name="demo-mode" id="demo-mode">
+                                                <input
+                                                    type="checkbox"
+                                                    class="setting-data"
+                                                    name="demo-mode"
+                                                    id="demo-mode"
+                                                >
                                                 <div class="annoto-slider round"></div>
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label col-sm-3" for="widget-position">Widget Position</label>
+                                        <label class="control-label col-sm-3" for="widget-position">
+                                            Widget Position
+                                        </label>
                                         <div class="col-sm-9">
                                             <div class="btn-group">
                                                 <button
-                                                        type="button"
-                                                        id="widget-position"
-                                                        class="btn btn-default annoto-dropdown-button"
+                                                    type="button"
+                                                    id="widget-position"
+                                                    class="btn btn-default annoto-dropdown-button"
                                                 >
                                                     Choose position
                                                 </button>
                                                 <button
-                                                        type="button"
-                                                        class="btn btn-default dropdown-toggle"
-                                                        data-toggle="dropdown"
-                                                        aria-haspopup="true"
-                                                        aria-expanded="false"
+                                                    type="button"
+                                                    class="btn btn-default dropdown-toggle"
+                                                    data-toggle="dropdown"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false"
                                                 >
                                                     <span class="caret"></span>
                                                     <span class="sr-only">Toggle Dropdown</span>
@@ -70,7 +91,12 @@
                                                     <li><a href="#" name="left">Left</a></li>
                                                 </ul>
                                             </div>
-                                            <input type="hidden" class="setting-data is-dropdown" name="widget-position" value="">
+                                            <input
+                                                type="hidden"
+                                                class="setting-data is-dropdown"
+                                                name="widget-position"
+                                                value=""
+                                            >
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -78,18 +104,18 @@
                                         <div class="col-sm-9">
                                             <div class="btn-group">
                                                 <button
-                                                        type="button"
-                                                        id="rtl-support"
-                                                        class="btn btn-default annoto-dropdown-button"
+                                                    type="button"
+                                                    id="rtl-support"
+                                                    class="btn btn-default annoto-dropdown-button"
                                                 >
                                                     Choose locale
                                                 </button>
                                                 <button
-                                                        type="button"
-                                                        class="btn btn-default dropdown-toggle"
-                                                        data-toggle="dropdown"
-                                                        aria-haspopup="true"
-                                                        aria-expanded="false"
+                                                    type="button"
+                                                    class="btn btn-default dropdown-toggle"
+                                                    data-toggle="dropdown"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false"
                                                 >
                                                     <span class="caret"></span>
                                                     <span class="sr-only">Toggle Dropdown</span>
@@ -99,7 +125,12 @@
                                                     <li><a href="#" name="1">He</a></li>
                                                 </ul>
                                             </div>
-                                            <input type="hidden" class="setting-data is-dropdown" name="rtl-support" value="">
+                                            <input
+                                                type="hidden"
+                                                class="setting-data is-dropdown"
+                                                name="rtl-support"
+                                                value=""
+                                            >
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -128,7 +159,12 @@
                                                     <li><a href="#" name="vimeo">Vimeo</a></li>
                                                 </ul>
                                             </div>
-                                            <input type="hidden" class="setting-data is-dropdown" name="player-type" value="">
+                                            <input
+                                                type="hidden"
+                                                class="setting-data is-dropdown"
+                                                name="player-type"
+                                                value=""
+                                            >
                                         </div>
                                     </div>
                                 </div>
@@ -138,18 +174,40 @@
                             <div class="panel panel-white api-key">
                                 <div class="panel-body">
                                     <div class="input-group">
-                                        <span class="input-group-addon annoto-input-group"">
-                                            <img src="<?php echo ANNOTO_PLUGIN_URL . 'src/img/lock.png'?>" alt="" class="annoto-icon-image" title="SSO Secret">
+                                        <span class="input-group-addon annoto-input-group">
+                                            <img
+                                                src="<?php echo ANNOTO_PLUGIN_URL . 'src/img/lock.png'?>"
+                                                alt=""
+                                                class="annoto-icon-image"
+                                                title="SSO Secret"
+                                            >
                                         </span>
-                                        <input type="text" class="form-control setting-data" name="sso-secret" placeholder="SSO Secret..." id="sso-secret" />
+                                        <input
+                                            type="text"
+                                            class="form-control setting-data"
+                                            name="sso-secret"
+                                            placeholder="SSO Secret..."
+                                            id="sso-secret"
+                                        />
                                     </div>
                                 </div>
                                 <div class="panel-body">
                                     <div class="input-group">
                                         <span class="input-group-addon annoto-input-group">
-                                            <img src="<?php echo ANNOTO_PLUGIN_URL . 'src/img/key.png'?>" alt="" class="annoto-icon-image" title="API key">
+                                            <img
+                                                src="<?php echo ANNOTO_PLUGIN_URL . 'src/img/key.png'?>"
+                                                alt=""
+                                                class="annoto-icon-image"
+                                                title="API key"
+                                            >
                                         </span>
-                                        <input type="text" class="form-control setting-data" name="api-key" placeholder="API Key..." id="api-key" />
+                                        <input
+                                            type="text"
+                                            class="form-control setting-data"
+                                            name="api-key"
+                                            placeholder="API Key..."
+                                            id="api-key"
+                                        />
                                     </div>
                                 </div>
                             </div>

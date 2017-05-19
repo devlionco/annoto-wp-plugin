@@ -2,6 +2,9 @@
 
 require_once ('class.jwt.php');
 
+/**
+ * Class Annoto
+ */
 class Annoto {
 
     /** @var bool $initiated */
@@ -10,6 +13,7 @@ class Annoto {
     /** @var WP_User|null $currentUserIdentity */
     private static $currentUserIdentity = null;
 
+    /** @var array $defaultSettingValues */
     private static $defaultSettingValues = [
         'sso-support' => 1,
         'demo-mode' =>  0,
@@ -20,20 +24,28 @@ class Annoto {
         'api-key' => ''
     ];
 
+    /**
+     * Init method will initiate all hooks and handle ajax to return settings
+     */
     public static function init()
     {
         if ( ! static::$initiated ) {
             static::init_hooks();
         }
 
+        $post = $_POST;
+
         if (
-            array_key_exists('action', $_POST)
-            && $_POST['action'] === 'get-settings'
+            array_key_exists('action', $post)
+            && $post['action'] === 'get-settings'
         ) {
             static::getConfigData();
         }
     }
 
+    /**
+     * All hooks to initialize
+     */
     public static function init_hooks()
     {
         static::$initiated = true;
@@ -44,6 +56,9 @@ class Annoto {
         add_filter('embed_oembed_html', [ static::class, 'prepareVideoIFrameAttributes' ], 10, 3);
     }
 
+    /**
+     * Load all sources
+     */
     public static function loadResources()
     {
 //        wp_register_script(
@@ -64,6 +79,9 @@ class Annoto {
         wp_enqueue_script( 'annoto.js' );
     }
 
+    /**
+     * Setter to store current user to class property
+     */
     public static function setCurrentUser()
     {
         $currentUser = wp_get_current_user();
@@ -73,11 +91,16 @@ class Annoto {
         }
     }
 
+    /**
+     * Handle the AJAX and incapsulate business-logic according to retrieving correct config values
+     */
     public static function getConfigData()
     {
+        $post = $_POST;
+
         if (
-            array_key_exists('action', $_POST)
-            && $_POST['action'] === 'get-settings'
+            array_key_exists('action', $post)
+            && $post['action'] === 'get-settings'
         ) {
             $pluginSettings = get_option('annoto_settings');
 
@@ -111,7 +134,16 @@ class Annoto {
         }
     }
 
-    public static function prepareVideoIFrameAttributes($html, $url, $attr)
+    /**
+     * Make IFrames compatible with Annoto API
+     *
+     * @param string $html
+     * @param string $url
+     * @param array $attr
+     *
+     * @return string
+     */
+    public static function prepareVideoIFrameAttributes( $html, $url, $attr )
     {
         if ( empty( $attr['id'] ) ) {
             $uniqueId = uniqid('annoto_', true);
@@ -125,6 +157,11 @@ class Annoto {
         return $html;
     }
 
+    /**
+     * Render view by name
+     *
+     * @param string $name
+     */
     public static function view( $name ) {
 
         $file = ANNOTO_PLUGIN_DIR . 'views/'. $name . '.php';
@@ -133,8 +170,7 @@ class Annoto {
     }
 
     /**
-     * Attached to activate_{ plugin_basename( __FILES__ ) } by register_activation_hook()
-     * @static
+     * Plugin activation handler
      */
     public static function plugin_activation() {
         if ( static::checkCurrentVersionCorresponding() ) {
@@ -151,29 +187,45 @@ class Annoto {
     }
 
     /**
-     * Removes all connection options
+     * Plugin deactivation handler
      */
     public static function plugin_deactivation( ) {
         return delete_option( ANNOTO_SETTING_KEY_NAME );
     }
 
+    /**
+     * Set default setting values for plugin
+     *
+     * @return bool
+     */
     private static function setDefaultSettingsValuesForPlugin()
     {
         return add_option( ANNOTO_SETTING_KEY_NAME, static::$defaultSettingValues, 'no' );
     }
 
+    /**
+     * Check is current version of Annoto plugin corresponding to WP version
+     *
+     * @return mixed
+     */
     private static function checkCurrentVersionCorresponding()
     {
         return version_compare( $GLOBALS['wp_version'], ANNOTO_MINIMUM_WP_VERSION, '<' );
     }
 
+    /**
+     * Show setting fails info
+     */
     private static function showSettingFailsInfo()
     {
         $message = '<strong>' . __('Can\'t set default values for Annoto plugin.', 'annoto') . '</strong>';
 
-        static::bail_on_activation( $message );
+        static::showMessageTemplate( $message );
     }
 
+    /**
+     * Show update message info
+     */
     private static function showUpdateMessageInfo()
     {
         $message = '<strong>'
@@ -188,9 +240,16 @@ class Annoto {
                 'https://codex.wordpress.org/Upgrading_WordPress'
             );
 
-        static::bail_on_activation( $message );
+        static::showMessageTemplate( $message );
     }
 
+    /**
+     * Generate JWT Token
+     *
+     * @param array $pluginSettings
+     *
+     * @return string
+     */
     private static function generateToken(array $pluginSettings)
     {
         $issuedAt = time();
@@ -208,7 +267,12 @@ class Annoto {
         return JWT::encode($payload, $pluginSettings['sso-secret']);
     }
 
-    private static function bail_on_activation( $message ) {
+    /**
+     * Show message template
+     *
+     * @param string $message
+     */
+    private static function showMessageTemplate( $message ) {
         ?>
         <!doctype html>
         <html>

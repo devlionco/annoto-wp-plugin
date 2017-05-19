@@ -1,7 +1,5 @@
 jQuery( function ( $ ) {
 
-    'use strict';
-
     var getSettingsDeferred = $.Deferred();
 
     $.post(
@@ -26,10 +24,12 @@ jQuery( function ( $ ) {
                 var playerId = '';
 
                 $('article iframe').each(function () {
-                    if (this.src.indexOf(data['player-type']) !== -1 && typeof this.id !== 'undefined') {
+                    if ( this.src.indexOf( data[ 'player-type' ] ) !== -1 && typeof this.id !== 'undefined' ) {
                         playerId = this.id;
                         return false;
                     }
+
+                    return true;
                 });
 
                 return {
@@ -37,12 +37,11 @@ jQuery( function ( $ ) {
                     settings: data
                 };
             },
-            function (errText){
-                console.error(errText)
+            function ( errText ){
+                console.error( errText );
             })
         .then(
-            function (configData) {
-                console.log(configData.settings);
+            function ( configData ) {
 
                 if ( configData.playerId.length === 0 ) {
                     return;
@@ -90,8 +89,5 @@ jQuery( function ( $ ) {
                         console.error( bootError );
                     }
                 );
-
-                // annotoApi.auth(configData.settings.token);
-
-            });
+        });
 });

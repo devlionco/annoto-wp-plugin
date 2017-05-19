@@ -1,7 +1,5 @@
 jQuery(document).ready( function ( $ ) {
 
-    'use strict';
-
     var nameToOutputTextMapper = {
         mappingData: {
             'widget-position': {
@@ -83,7 +81,7 @@ jQuery(document).ready( function ( $ ) {
             return true;
         },
         isJWTStringValid: function (input ) {
-            var parts = input.split(".");
+            var parts = input.split('.');
 
             return parts.length === 3;
         },
@@ -95,6 +93,8 @@ jQuery(document).ready( function ( $ ) {
             if (inputFieldId === 'api-key') {
                 return 'This field can not be empty and must contain correct JWT string';
             }
+
+            return '';
         },
         showValidationError: function ( fieldJQueryObject ) {
             fieldJQueryObject.closest('div.input-group').addClass('has-error');

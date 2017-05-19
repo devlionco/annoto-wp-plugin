@@ -23,12 +23,14 @@ class AnnotoAdmin {
             self::initHooks();
         }
 
+        $post = $_POST;
+
         if (
-            array_key_exists( 'action', $_POST )
-            && array_key_exists( 'data', $_POST )
-            && $_POST[ 'action' ] === 'save-settings'
+            array_key_exists( 'action', $post )
+            && array_key_exists( 'data', $post )
+            && $post[ 'action' ] === 'save-settings'
         ) {
-            static::saveSettings( $_POST['data'] );
+            static::saveSettings( $post['data'] );
         }
     }
 
@@ -130,7 +132,7 @@ class AnnotoAdmin {
 
         echo json_encode( [
             'status'=> 'success',
-            'data' => get_option('annoto_settings')
+            'data' => get_option( 'annoto_settings' )
         ] );
         exit();
     }
@@ -142,7 +144,7 @@ class AnnotoAdmin {
      *
      * @return array
      */
-    private static function castSettingValueTypes(array $settingData)
+    private static function castSettingValueTypes( array $settingData )
     {
         foreach ( $settingData as $settingName => &$settingValue ) {
             if ( in_array( $settingName, static::$intConfigValueNames, true ) ) {
