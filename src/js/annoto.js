@@ -77,19 +77,21 @@ jQuery( function ( $ ) {
                 window.Annoto.on('ready', function (api) {
                     annotoApi = api;
                 });
-                // window.Annoto.auth(configData.settings.token);
                 var annotoBoot = window.Annoto.boot(config);
 
                 $.when( annotoBoot ).then(
                     function () {
-                        // annotoApi.auth(token)
+                        if ( configData.settings['is-annoto-auth'] ) {
+                            annotoApi.auth( configData.settings['token'] );
+                        }
+
                     },
                     function (bootError) {
-                        console.error(bootError);
+                        console.error( bootError );
                     }
                 );
 
                 // annotoApi.auth(configData.settings.token);
 
-        });
+            });
 });

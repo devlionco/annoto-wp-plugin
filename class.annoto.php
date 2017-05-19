@@ -91,9 +91,14 @@ class Annoto {
             }
 
             $pluginSettings['token'] = '';
+            $pluginSettings['is-annoto-auth'] = false;
 
             if ( ! $pluginSettings['demo-mode'] && is_user_logged_in() ) {
                 $pluginSettings['token'] = static::generateToken($pluginSettings);
+
+                if ( $pluginSettings['sso-support'] ) {
+                    $pluginSettings['is-annoto-auth'] = true;
+                }
             }
 
             unset($pluginSettings['sso-secret']);
