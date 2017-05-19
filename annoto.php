@@ -24,11 +24,20 @@ along with Annoto Plugin. If not, see https://www.gnu.org/licenses/quick-guide-g
 */
 
 
-
+/** ANNOTO_VERSION version - of the Annoto plugin */
 define( 'ANNOTO_VERSION', '0.1' );
+
+/** ANNOTO_MINIMUM_WP_VERSION - minimum required version of the WordPress */
 define( 'ANNOTO_MINIMUM_WP_VERSION', '4.7' );
+
+/** ANNOTO_PLUGIN_DIR */
 define( 'ANNOTO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+
+/** ANNOTO_PLUGIN_URL */
 define( 'ANNOTO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+/** ANNOTO_SETTING_KEY_NAME - name of the key of the plugin settings in DB */
+define( 'ANNOTO_SETTING_KEY_NAME', 'annoto_settings' );
 
 
 register_activation_hook( __FILE__, array( Annoto::class, 'plugin_activation' ) );
@@ -41,4 +50,16 @@ require_once( ANNOTO_PLUGIN_DIR . 'class.annoto.php' );
 if ( is_admin() ) {
     require_once( ANNOTO_PLUGIN_DIR . 'class.annoto-admin.php' );
     add_action( 'init', [ AnnotoAdmin::class, 'init' ] );
+} else {
+    add_action( 'init', [ Annoto::class, 'init' ] );
 }
+
+
+
+
+
+
+
+
+
+

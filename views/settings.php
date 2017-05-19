@@ -4,9 +4,13 @@
             <div class="notification-header"><strong>Success!</strong></div>
             <span> Settings was saved successfully!</span>
         </div>
-        <div class="alert alert-danger text-left display-none"id="failMessage" role="alert">
+        <div class="alert alert-danger text-left display-none" id="failMessage" role="alert">
             <div class="notification-header"><strong>Failed!</strong></div>
             <span> During saving Settings!</span>
+        </div>
+        <div class="alert alert-warning text-left display-none" id="errorMessage" role="alert">
+            <div class="notification-header"><strong>Warning!</strong></div>
+            <span> Error message </span>
         </div>
     </div>
     <input type="hidden" name="settings-from-server" id="settingsFromServer" value='<?php echo json_encode(get_option('annoto_settings')); ?>'>
@@ -130,7 +134,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4" id="credentialBlock">
                             <div class="panel panel-white api-key">
                                 <div class="panel-body">
                                     <div class="input-group">

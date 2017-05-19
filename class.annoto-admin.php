@@ -8,10 +8,17 @@ class AnnotoAdmin {
     /** @var bool $initiated */
     private static $initiated = false;
 
+    public static $intConfigValueNames = [
+        'sso-support',
+        'demo-mode',
+        'rtl-support'
+    ];
+
     /**
      * Init method will initiate all hooks and handle ajax to save settings
      */
-    public static function init() {
+    public static function init()
+    {
         if ( ! self::$initiated ) {
             self::initHooks();
         }
@@ -28,21 +35,23 @@ class AnnotoAdmin {
     /**
      * All hooks to initialize
      */
-    public static function initHooks() {
+    public static function initHooks()
+    {
         self::$initiated = true;
 
-        add_action( 'admin_menu', [ static::class, 'loadMenu' ]);
+        add_action( 'admin_menu', [ static::class, 'loadMenu' ] );
         add_action( 'admin_enqueue_scripts', [ static::class, 'loadResources' ] );
     }
 
     /**
      * Load menu Annoto in the admin menu side bar
      */
-    public static function loadMenu() {
+    public static function loadMenu()
+    {
         add_options_page(
             __( 'Annoto', 'annoto' ),
             __( 'Annoto', 'annoto' ),
-            'manage_options' ,
+             'manage_options' ,
             'annoto-key-config',
             [ self::class, 'displaySettingsPage']
         );
@@ -51,21 +60,24 @@ class AnnotoAdmin {
     /**
      * Render Settings page
      */
-    public static function displaySettingsPage() {
+    public static function displaySettingsPage()
+    {
         Annoto::view( 'settings' );
     }
 
     /**
      * Load all sources
      */
-    public static function loadResources() {
+    public static function loadResources()
+    {
         global $hook_suffix;
 
         if (
-        in_array(
-            $hook_suffix,
-            apply_filters( 'annoto_admin_page_hook_suffixes', [ 'settings_page_annoto-key-config' ] )
-        )
+            in_array(
+                $hook_suffix,
+                apply_filters( 'annoto_admin_page_hook_suffixes', [ 'settings_page_annoto-key-config' ] ),
+                true
+            )
         ) {
 
             wp_register_style(
@@ -109,7 +121,7 @@ class AnnotoAdmin {
      */
     public static function saveSettings( array $settingsData )
     {
-        $optionSaveStatus = update_option( 'annoto_settings', $settingsData );
+        $optionSaveStatus = update_option( 'annoto_settings', static::castSettingValueTypes($settingsData) );
 
         if (!$optionSaveStatus) {
             echo json_encode( [ 'status' => 'failed' ] );
@@ -121,5 +133,23 @@ class AnnotoAdmin {
             'data' => get_option('annoto_settings')
         ] );
         exit();
+    }
+
+    /**
+     * Make type casting for some setting value
+     *
+     * @param array $settingData
+     *
+     * @return array
+     */
+    private static function castSettingValueTypes(array $settingData)
+    {
+        foreach ( $settingData as $settingName => &$settingValue ) {
+            if ( in_array( $settingName, static::$intConfigValueNames, true ) ) {
+                $settingValue = ( int ) $settingValue;
+            }
+        }
+
+        return $settingData;
     }
 }

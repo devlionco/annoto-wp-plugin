@@ -1,4 +1,4 @@
-#annoto-bootstrap {
+div#annoto-bootstrap {
     margin-top: 16px;
 }
 
@@ -69,6 +69,7 @@ input:checked + .annoto-slider:before {
 
 .annoto-notification {
     position: fixed;
+    top: 32px;
     right: 0em;
     z-index: 99999;
 }
@@ -89,28 +90,6 @@ input:checked + .annoto-slider:before {
 .annoto-icon-image {
     width: 19px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .onoffswitch {
     position: relative; width: 90px;
@@ -172,4 +151,10 @@ input:checked + .annoto-slider:before {
     border-right: 1px solid lightgrey;
     border-radius: 0;
     box-shadow: none;
+}
+
+@media screen and (max-width: 782px) {
+    .annoto-notification {
+        top: 46px;
+    }
 }
