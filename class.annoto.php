@@ -120,7 +120,8 @@ class Annoto {
 
             $pluginSettings['token'] = '';
 
-            if ( ! $pluginSettings['demo-mode']
+            if (
+                ! $pluginSettings['demo-mode']
                 && $pluginSettings['sso-support']
                 && is_user_logged_in()
             ) {
