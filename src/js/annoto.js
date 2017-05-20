@@ -43,7 +43,7 @@ jQuery( function ( $ ) {
         .then(
             function ( configData ) {
 
-                if ( configData.playerId.length === 0 ) {
+                if ( configData.playerId.length === 0 || configData.settings['api-key'].length === 0 ) {
                     return;
                 }
 
@@ -67,27 +67,22 @@ jQuery( function ( $ ) {
                 };
 
 
-                if ( ! window.Annoto) {
-                    console && console.error('Annoto: not loaded');
+                if ( ! window.Annoto ) {
+                    console && console.error( 'Annoto: not loaded' );
+
                     return;
                 }
 
-                var annotoApi;
-                window.Annoto.on('ready', function (api) {
-                    annotoApi = api;
-                });
-                var annotoBoot = window.Annoto.boot(config);
-
-                $.when( annotoBoot ).then(
-                    function () {
-                        if ( configData.settings['is-annoto-auth'] ) {
-                            annotoApi.auth( configData.settings['token'] );
-                        }
-
-                    },
-                    function (bootError) {
-                        console.error( bootError );
+                window.Annoto.on( 'ready', function ( api ) {
+                    if ( configData.settings['token'].length > 0 ) {
+                        api.auth( configData.settings['token'], function ( annotoAuthError ) {
+                            if ( annotoAuthError ) {
+                                console.error( annotoAuthError );
+                            }
+                        } );
                     }
-                );
+                } );
+
+                window.Annoto.boot( config );
         });
 });
