@@ -97,6 +97,7 @@ input:checked + .annoto-slider:before {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
 }
 .onoffswitch-checkbox {
     display: none;
@@ -112,7 +113,7 @@ input:checked + .annoto-slider:before {
     display: block;
     width: 200%;
     margin-left: -100%;
-    transition: margin 0.3s ease-in 0s;
+    transition: margin .3s ease-in 0s;
 }
 .onoffswitch-inner:before, .onoffswitch-inner:after {
     display: block;
@@ -132,13 +133,13 @@ input:checked + .annoto-slider:before {
 .onoffswitch-inner:before {
     content: "ON";
     padding-left: 10px;
-    background-color: #EEEEEE;
+    background-color: #eeeeee;
     color: #666666;
 }
 .onoffswitch-inner:after {
     content: "OFF";
     padding-right: 10px;
-    background-color: #EEEEEE;
+    background-color: #eeeeee;
     color: #999999;
     text-align: right;
 }
@@ -146,12 +147,12 @@ input:checked + .annoto-slider:before {
     display: block;
     width: 39px;
     margin: 0;
-    background: #A1A1A1;
+    background: #a1a1a1;
     position: absolute;
     top: 0;
     bottom: 0;
     right: 51px;
-    transition: all 0.3s ease-in 0s;
+    transition: all .3s ease-in 0s;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
     margin-left: 0;
@@ -161,7 +162,7 @@ input:checked + .annoto-slider:before {
     background-color: #337ab7;
 }
 
-#annoto-bootstrap .panel-grey {
+.annoto-bootstrap .panel-grey {
     border-color: #eeeeee !important;
 }
 
@@ -169,7 +170,7 @@ input:checked + .annoto-slider:before {
     box-shadow: none !important;
 }
 
-#annoto-bootstrap .panel.panel-right-grey {
+.annoto-bootstrap .panel.panel-right-grey {
     border-right: 1px solid lightgrey;
     border-radius: 0;
     box-shadow: none;

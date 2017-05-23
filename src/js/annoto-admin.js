@@ -70,7 +70,7 @@ jQuery(document).ready( function ( $ ) {
             var ssoSecreteField = $('input#sso-secret');
             var apiKeyField = $('input#api-key');
 
-            if ( ! ssoSecreteField.prop( 'disabled' ) && ssoSecreteField.val().length !== 64) {
+            if ( ! ssoSecreteField.prop( 'disabled' ) && ! this.isSSOSecretValid( ssoSecreteField.val() ) ) {
                 return this.showValidationError( ssoSecreteField );
             }
 
@@ -80,10 +80,19 @@ jQuery(document).ready( function ( $ ) {
 
             return true;
         },
-        isJWTStringValid: function (input ) {
-            var parts = input.split('.');
+        isJWTStringValid: function ( input ) {
+            var segments = input.split('.');
+            var validBase64RegExp = new RegExp('[A-Za-z0-9+/=]');
 
-            return parts.length === 3;
+            return segments.length === 3
+                && Boolean ( validBase64RegExp.test( segments[0] ) )
+                && Boolean ( validBase64RegExp.test( segments[1] ) )
+                && Boolean ( validBase64RegExp.test( segments[2] ) );
+        },
+        isSSOSecretValid : function ( input ) {
+            var validRegExp = new RegExp('[A-Za-z0-9]');
+
+            return input.length === 64 && Boolean( validRegExp.test( input ) );
         },
         getErrorText: function (inputFieldId) {
             if (inputFieldId === 'sso-secret') {
