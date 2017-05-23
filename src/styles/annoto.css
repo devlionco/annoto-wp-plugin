@@ -49,7 +49,6 @@ input:checked + .annoto-slider:before {
     transform: translateX(33px);
 }
 
-/* Rounded sliders */
 .annoto-slider.round {
     border-radius: 34px;
 }
@@ -58,9 +57,9 @@ input:checked + .annoto-slider:before {
     border-radius: 50%;
 }
 
-.annoto-dropdown-button {
+.annoto-bootstrap .btn.annoto-dropdown-button {
     width: 12em;
-    text-align: left !important;
+    text-align: left;
 }
 
 .display-none {
@@ -163,11 +162,11 @@ input:checked + .annoto-slider:before {
 }
 
 .annoto-bootstrap .panel-grey {
-    border-color: #eeeeee !important;
+    border-color: #eeeeee;
 }
 
 .panel-white {
-    box-shadow: none !important;
+    box-shadow: none;
 }
 
 .annoto-bootstrap .panel.panel-right-grey {
