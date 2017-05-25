@@ -43,7 +43,7 @@ jQuery( function ( $ ) {
         .then(
             function ( configData ) {
 
-                if ( configData.playerId.length === 0 || configData.settings['api-key'].length === 0 ) {
+                if ( configData.playerId.length === 0 || configData.settings['demo-mode'] ) {
                     return;
                 }
 
