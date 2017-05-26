@@ -36,7 +36,7 @@
                                 <div class="panel-body panel-settings">
                                     <div class="form-group top-buffer">
                                         <label
-                                            class="control-label col-lg-3 col-lg-push-1 col-xs-12"
+                                            class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label"
                                             for="widget-position"
                                         >
                                             Widget Position
@@ -76,7 +76,7 @@
                                     </div>
                                     <div class="form-group top-buffer">
                                         <label
-                                            class="control-label col-lg-3 col-lg-push-1 col-xs-12"
+                                            class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label"
                                             for="rtl-support"
                                         >
                                             Language
@@ -115,7 +115,7 @@
                                     </div>
                                     <div class="form-group top-buffer">
                                         <label
-                                            class="control-label col-lg-3 col-lg-push-1 col-xs-12"
+                                            class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label"
                                             for="player-type"
                                         >
                                             Player Type

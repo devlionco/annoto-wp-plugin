@@ -218,7 +218,7 @@ input:checked + .annoto-slider:before {
 }
 
 @media (max-width: 1200px) {
-    .form-horizontal .panel-settings label.control-label {
+    .form-horizontal .panel-settings .control-label.setting-label {
         text-align: center;
     }
 }
