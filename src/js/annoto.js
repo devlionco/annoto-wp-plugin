@@ -43,8 +43,6 @@ jQuery( function ( $ ) {
         .then(
             function ( configData ) {
 
-                console.log(configData);
-
                 if ( configData.playerId.length === 0 ) {
                     console && console.error('Annoto Plugin: Can\'t determine the player ID.');
                     return;
@@ -83,7 +81,6 @@ jQuery( function ( $ ) {
 
                 if ( ! window.Annoto ) {
                     console && console.error( 'Annoto: not loaded' );
-
                     return;
                 }
 
@@ -96,7 +93,6 @@ jQuery( function ( $ ) {
                         } );
                     }
                 } );
-
                 window.Annoto.boot( config );
-        });
+            });
 });
