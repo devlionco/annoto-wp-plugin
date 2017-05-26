@@ -9,7 +9,9 @@ div.annoto-bootstrap {
     height: 26px;
 }
 
-.annoto-switch input {display:none;}
+.annoto-switch input {
+    display:none;
+}
 
 .annoto-slider {
     position: absolute;
@@ -58,7 +60,7 @@ input:checked + .annoto-slider:before {
 }
 
 .annoto-bootstrap .btn.annoto-dropdown-button {
-    width: 12em;
+    width: 10em;
     text-align: left;
 }
 
@@ -203,8 +205,26 @@ input:checked + .annoto-slider:before {
     margin-top: 2em;
 }
 
-@media screen and (max-width: 782px) {
+@media (max-width: 782px) {
     .annoto-notification {
         top: 46px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .annoto-bootstrap .btn.annoto-dropdown-button {
+        width: 15em;
+    }
+}
+
+@media (max-width: 1200px) {
+    .annoto-bootstrap .form-horizontal .panel-settings .control-label {
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .annoto-bootstrap .panel.panel-right-grey {
+        border-right: 0;
     }
 }

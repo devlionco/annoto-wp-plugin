@@ -28,17 +28,20 @@
                     alt="Annoto"
                 />
             </div>
-            <div class="panel-body">
+            <div class="panel-body text-center">
                 <form class="form-horizontal" id="settingForm" method="post" action="">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="panel panel-white panel-right-grey">
-                                <div class="panel-body">
+                                <div class="panel-body panel-settings">
                                     <div class="form-group top-buffer">
-                                        <label class="control-label col-sm-3" for="widget-position">
+                                        <label
+                                            class="control-label col-lg-3 col-lg-push-1 col-xs-12"
+                                            for="widget-position"
+                                        >
                                             Widget Position
                                         </label>
-                                        <div class="col-sm-9">
+                                        <div class="col-lg-9 col-xs-12">
                                             <div class="btn-group">
                                                 <button
                                                     type="button"
@@ -72,8 +75,13 @@
                                         </div>
                                     </div>
                                     <div class="form-group top-buffer">
-                                        <label class="control-label col-sm-3" for="rtl-support">Language</label>
-                                        <div class="col-sm-9">
+                                        <label
+                                            class="control-label col-lg-3 col-lg-push-1 col-xs-12"
+                                            for="rtl-support"
+                                        >
+                                            Language
+                                        </label>
+                                        <div class="col-lg-9 col-xs-12">
                                             <div class="btn-group">
                                                 <button
                                                     type="button"
@@ -106,8 +114,13 @@
                                         </div>
                                     </div>
                                     <div class="form-group top-buffer">
-                                        <label class="control-label col-sm-3" for="player-type">Player Type</label>
-                                        <div class="col-sm-9">
+                                        <label
+                                            class="control-label col-lg-3 col-lg-push-1 col-xs-12"
+                                            for="player-type"
+                                        >
+                                            Player Type
+                                        </label>
+                                        <div class="col-lg-9 col-xs-12">
                                             <div class="btn-group">
                                                 <button
                                                     type="button"
@@ -147,13 +160,13 @@
                                 <div class="panel-body">
                                     <div class="form-group">
                                         <label class="control-label col-sm-3" for="sso-support">SSO Support</label>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 text-left">
                                             <label class="annoto-switch">
                                                 <input
-                                                        class="setting-data"
-                                                        type="checkbox"
-                                                        name="sso-support"
-                                                        id="sso-support"
+                                                    class="setting-data"
+                                                    type="checkbox"
+                                                    name="sso-support"
+                                                    id="sso-support"
                                                 >
                                                 <div class="annoto-slider round"></div>
                                             </label>
@@ -180,13 +193,13 @@
                                 <div class="panel-body">
                                     <div class="form-group">
                                         <label class="control-label col-sm-3" for="demo-mode">Demo Mode</label>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 text-left">
                                             <label class="annoto-switch">
                                                 <input
-                                                        type="checkbox"
-                                                        class="setting-data"
-                                                        name="demo-mode"
-                                                        id="demo-mode"
+                                                    type="checkbox"
+                                                    class="setting-data"
+                                                    name="demo-mode"
+                                                    id="demo-mode"
                                                 >
                                                 <div class="annoto-slider round"></div>
                                             </label>
@@ -215,7 +228,13 @@
                     </div>
                     <div class="form-group submit-block">
                         <div class="text-center">
-                            <button class="btn btn-primary annoto-save" id="submitSettings" type="submit">Save Settings</button>
+                            <button
+                                class="btn btn-primary annoto-save"
+                                id="submitSettings"
+                                type="submit"
+                            >
+                                Save Settings
+                            </button>
                         </div>
                     </div>
                 </form>
