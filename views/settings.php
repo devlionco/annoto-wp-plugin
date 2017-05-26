@@ -20,49 +20,23 @@
         value='<?php echo json_encode(get_option('annoto_settings')); ?>'
     >
     <div class="col-sm-push-2 col-sm-8">
-        <div class="panel panel-primary">
+        <div class="panel panel-primary annoto-panel">
             <div class="panel-heading text-center">
                 <img
                     class="annoto-masthead_logo"
-                    src="<?php echo esc_url( plugins_url( '../src/img/annoto-logo.png', __FILE__ ) ); ?>"
+
+                    src="<?php echo esc_url( plugins_url( '../src/img/logo_white.svg', __FILE__ ) ); ?>"
+
                     alt="Annoto"
                 />
             </div>
             <div class="panel-body">
                 <form class="form-horizontal" id="settingForm" method="post" action="">
                     <div class="row">
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <div class="panel panel-white panel-right-grey">
                                 <div class="panel-body">
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-3" for="sso-support">SSO Support</label>
-                                        <div class="col-sm-9">
-                                            <label class="annoto-switch">
-                                                <input
-                                                    class="setting-data"
-                                                    type="checkbox"
-                                                    name="sso-support"
-                                                    id="sso-support"
-                                                >
-                                                <div class="annoto-slider round"></div>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-3" for="demo-mode">Demo Mode</label>
-                                        <div class="col-sm-9">
-                                            <label class="annoto-switch">
-                                                <input
-                                                    type="checkbox"
-                                                    class="setting-data"
-                                                    name="demo-mode"
-                                                    id="demo-mode"
-                                                >
-                                                <div class="annoto-slider round"></div>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
+                                    <div class="form-group top-buffer">
                                         <label class="control-label col-sm-3" for="widget-position">
                                             Widget Position
                                         </label>
@@ -99,7 +73,7 @@
                                             >
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group top-buffer">
                                         <label class="control-label col-sm-3" for="rtl-support">Language</label>
                                         <div class="col-sm-9">
                                             <div class="btn-group">
@@ -133,7 +107,7 @@
                                             >
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group top-buffer">
                                         <label class="control-label col-sm-3" for="player-type">Player Type</label>
                                         <div class="col-sm-9">
                                             <div class="btn-group">
@@ -170,9 +144,23 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4" id="credentialBlock">
+                        <div class="col-sm-6" id="credentialBlock">
                             <div class="panel panel-white api-key">
                                 <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3" for="sso-support">SSO Support</label>
+                                        <div class="col-sm-9">
+                                            <label class="annoto-switch">
+                                                <input
+                                                        class="setting-data"
+                                                        type="checkbox"
+                                                        name="sso-support"
+                                                        id="sso-support"
+                                                >
+                                                <div class="annoto-slider round"></div>
+                                            </label>
+                                        </div>
+                                    </div>
                                     <div class="input-group">
                                         <span class="input-group-addon annoto-input-group">
                                             <img
@@ -192,6 +180,20 @@
                                     </div>
                                 </div>
                                 <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3" for="demo-mode">Demo Mode</label>
+                                        <div class="col-sm-9">
+                                            <label class="annoto-switch">
+                                                <input
+                                                        type="checkbox"
+                                                        class="setting-data"
+                                                        name="demo-mode"
+                                                        id="demo-mode"
+                                                >
+                                                <div class="annoto-slider round"></div>
+                                            </label>
+                                        </div>
+                                    </div>
                                     <div class="input-group">
                                         <span class="input-group-addon annoto-input-group">
                                             <img
@@ -213,9 +215,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group submit-block">
                         <div class="text-center">
-                            <button class="btn btn-primary" id="submitSettings" type="submit">Save Settings</button>
+                            <button class="btn btn-primary annoto-save" id="submitSettings" type="submit">Save Settings</button>
                         </div>
                     </div>
                 </form>

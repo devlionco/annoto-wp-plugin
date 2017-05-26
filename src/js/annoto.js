@@ -38,13 +38,27 @@ jQuery( function ( $ ) {
                 };
             },
             function ( errText ){
-                console.error( errText );
+                console && console.error( errText );
             })
         .then(
             function ( configData ) {
 
-                if ( configData.playerId.length === 0 || configData.settings['demo-mode'] ) {
+                console.log(configData);
+
+                if ( configData.playerId.length === 0 ) {
+                    console && console.error('Annoto Plugin: Can\'t determine the player ID.');
                     return;
+                }
+
+                if ( !configData.settings['demo-mode'] && configData.settings['api-key'].length === 0 ) {
+                    console && console.error(
+                        'Annoto Plugin: Plugin isn\'t in the Demo Mode, please, set the SSO Secret.'
+                    );
+                    return;
+                }
+
+                if (configData.settings['demo-mode']) {
+                    console && console.warn('Annoto Plugin: Plugin boot in the Demo Mode.');
                 }
 
                 var config = {
@@ -77,7 +91,7 @@ jQuery( function ( $ ) {
                     if ( configData.settings['token'].length > 0 ) {
                         api.auth( configData.settings['token'], function ( annotoAuthError ) {
                             if ( annotoAuthError ) {
-                                console.error( annotoAuthError );
+                                console && console.error( annotoAuthError );
                             }
                         } );
                     }

@@ -36,11 +36,11 @@ div.annoto-bootstrap {
 }
 
 input:checked + .annoto-slider {
-    background-color: #3495d7;
+    background-color: #00a09a;
 }
 
 input:focus + .annoto-slider {
-    box-shadow: 0 0 1px #3495d7;
+    box-shadow: 0 0 1px #00a09a;
 }
 
 input:checked + .annoto-slider:before {
@@ -158,7 +158,7 @@ input:checked + .annoto-slider:before {
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0;
-    background-color: #337ab7;
+    background-color: #00a09a;
 }
 
 .annoto-bootstrap .panel-grey {
@@ -173,6 +173,34 @@ input:checked + .annoto-slider:before {
     border-right: 1px solid lightgrey;
     border-radius: 0;
     box-shadow: none;
+}
+
+.annoto-bootstrap .panel-primary.annoto-panel {
+    border-color: #ea5451;
+}
+
+.annoto-bootstrap .panel-primary.annoto-panel > .panel-heading {
+    background-color: #ea5451;
+    border-color: #ea5451;
+}
+
+.annoto-bootstrap .annoto-masthead_logo {
+    height: 40px;
+    width: 191px;
+}
+
+.annoto-bootstrap .submit-block .btn-primary.annoto-save {
+    background-color: #ea5451;
+    border-color: #ea5451;
+}
+
+.annoto-bootstrap .submit-block .btn-primary.annoto-save:hover {
+    background-color: #cd5451;
+    border-color: #cd5451;
+}
+
+.annoto-bootstrap .top-buffer {
+    margin-top: 2em;
 }
 
 @media screen and (max-width: 782px) {

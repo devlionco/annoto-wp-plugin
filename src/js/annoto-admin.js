@@ -119,6 +119,18 @@ jQuery(document).ready( function ( $ ) {
                 $( '#' + notificationId ).slideUp();
             }, 3000);
         },
+        disableSsoIfDemoOn: function ( demoModeSelector ) {
+            if ( $( demoModeSelector )[0].checked ) {
+                $( '#sso-support' )[0].checked = false;
+            }
+        },
+        disableDemoIfSsoOn: function (ssoSupportSelector) {
+            if ( $( ssoSupportSelector )[0].checked ) {
+                $( '#demo-mode' )[0].checked = false;
+                $( '#api-key' ).prop('disabled', false);
+                $( '#sso-secret' ).prop('disabled', false);
+            }
+        },
         sendToServer: function () {
             if ( this.isDataChanged() && this.isValid() ) {
 
@@ -191,10 +203,12 @@ jQuery(document).ready( function ( $ ) {
 
     $( '#demo-mode' ).change( function () {
         toggleDisabledInputs.ssoSecret();
+        settingForm.disableSsoIfDemoOn( this );
     } );
 
     $( '#sso-support' ).change( function () {
         toggleDisabledInputs.ssoSupport();
+        settingForm.disableDemoIfSsoOn( this );
     } );
 
     $( '.dropdown-menu a' ).click( function () {
