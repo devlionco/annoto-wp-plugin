@@ -24,9 +24,7 @@
             <div class="panel-heading text-center">
                 <img
                     class="annoto-masthead_logo"
-
                     src="<?php echo esc_url( plugins_url( '../src/img/logo_white.svg', __FILE__ ) ); ?>"
-
                     alt="Annoto"
                 />
             </div>
