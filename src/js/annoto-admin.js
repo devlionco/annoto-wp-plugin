@@ -82,7 +82,7 @@ jQuery(document).ready( function ( $ ) {
         },
         isJWTStringValid: function ( input ) {
             var segments = input.split('.');
-            var validBase64RegExp = new RegExp('[A-Za-z0-9+/=]');
+            var validBase64RegExp = new RegExp('^[A-Za-z0-9+-_/=]*$');
 
             return segments.length === 3
                 && Boolean ( validBase64RegExp.test( segments[0] ) )
@@ -90,7 +90,7 @@ jQuery(document).ready( function ( $ ) {
                 && Boolean ( validBase64RegExp.test( segments[2] ) );
         },
         isSSOSecretValid : function ( input ) {
-            var validRegExp = new RegExp('[A-Za-z0-9]');
+            var validRegExp = new RegExp('^[A-Za-z0-9]*$');
 
             return input.length === 64 && Boolean( validRegExp.test( input ) );
         },
