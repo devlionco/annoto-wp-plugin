@@ -15,7 +15,7 @@ class Annoto {
 
     /** @var array $defaultSettingValues */
     private static $defaultSettingValues = [
-        'sso-support' => 1,
+        'sso-support' => 0,
         'demo-mode' =>  0,
         'widget-position' => 'right',
         'rtl-support' => 0,

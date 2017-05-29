@@ -159,6 +159,39 @@
                             <div class="panel panel-white api-key">
                                 <div class="panel-body">
                                     <div class="form-group">
+                                        <label class="control-label col-sm-3" for="demo-mode">Demo Mode</label>
+                                        <div class="col-sm-9 text-left">
+                                            <label class="annoto-switch">
+                                                <input
+                                                        type="checkbox"
+                                                        class="setting-data"
+                                                        name="demo-mode"
+                                                        id="demo-mode"
+                                                >
+                                                <div class="annoto-slider round"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <span class="input-group-addon annoto-input-group">
+                                            <img
+                                                    src="<?php echo ANNOTO_PLUGIN_URL . 'src/img/key.png'?>"
+                                                    alt=""
+                                                    class="annoto-icon-image"
+                                                    title="API key"
+                                            >
+                                        </span>
+                                        <input
+                                                type="text"
+                                                class="form-control setting-data"
+                                                name="api-key"
+                                                placeholder="API Key..."
+                                                id="api-key"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
                                         <label class="control-label col-sm-3" for="sso-support">SSO Support</label>
                                         <div class="col-sm-9 text-left">
                                             <label class="annoto-switch">
@@ -187,39 +220,6 @@
                                             name="sso-secret"
                                             placeholder="SSO Secret..."
                                             id="sso-secret"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-3" for="demo-mode">Demo Mode</label>
-                                        <div class="col-sm-9 text-left">
-                                            <label class="annoto-switch">
-                                                <input
-                                                    type="checkbox"
-                                                    class="setting-data"
-                                                    name="demo-mode"
-                                                    id="demo-mode"
-                                                >
-                                                <div class="annoto-slider round"></div>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="input-group">
-                                        <span class="input-group-addon annoto-input-group">
-                                            <img
-                                                src="<?php echo ANNOTO_PLUGIN_URL . 'src/img/key.png'?>"
-                                                alt=""
-                                                class="annoto-icon-image"
-                                                title="API key"
-                                            >
-                                        </span>
-                                        <input
-                                            type="text"
-                                            class="form-control setting-data"
-                                            name="api-key"
-                                            placeholder="API Key..."
-                                            id="api-key"
                                         />
                                     </div>
                                 </div>
