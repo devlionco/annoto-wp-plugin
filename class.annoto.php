@@ -61,15 +61,9 @@ class Annoto {
      */
     public static function loadResources()
     {
-//        wp_register_script(
-//            'annoto-bootstrap.js',
-//            'https://app.annoto.net/annoto-bootstrap.js',
-//            [],
-//            ANNOTO_VERSION
-//        );
         wp_register_script(
             'annoto-bootstrap.js',
-            'https://staging-app.annoto.net/annoto-bootstrap.js',
+            'https://app.annoto.net/annoto-bootstrap.js',
             [],
             ANNOTO_VERSION
         );
