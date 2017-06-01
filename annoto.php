@@ -23,7 +23,6 @@ You should have received a copy of the GNU General Public License
 along with Annoto Plugin. If not, see https://www.gnu.org/licenses/quick-guide-gplv3.html.
 */
 
-
 /** ANNOTO_VERSION version - of the Annoto plugin */
 define( 'ANNOTO_VERSION', '0.1' );
 
@@ -39,19 +38,16 @@ define( 'ANNOTO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 /** ANNOTO_SETTING_KEY_NAME - name of the key of the plugin settings in DB */
 define( 'ANNOTO_SETTING_KEY_NAME', 'annoto_settings' );
 
-
-register_activation_hook( __FILE__, array( Annoto::class, 'plugin_activation' ) );
-register_deactivation_hook( __FILE__, array( Annoto::class, 'plugin_deactivation' ) );
-
 require_once( ANNOTO_PLUGIN_DIR . 'class.annoto.php' );
 
-
+register_activation_hook( __FILE__, array( 'Annoto', 'plugin_activation' ) );
+register_deactivation_hook( __FILE__, array( 'Annoto', 'plugin_deactivation' ) );
 
 if ( is_admin() ) {
     require_once( ANNOTO_PLUGIN_DIR . 'class.annoto-admin.php' );
-    add_action( 'init', [ AnnotoAdmin::class, 'init' ] );
+    add_action( 'init', [ 'AnnotoAdmin', 'init' ] );
 } else {
-    add_action( 'init', [ Annoto::class, 'init' ] );
+    add_action( 'init', [ 'Annoto', 'init' ] );
 }
 
 

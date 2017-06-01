@@ -41,8 +41,8 @@ class AnnotoAdmin {
     {
         self::$initiated = true;
 
-        add_action( 'admin_menu', [ static::class, 'loadMenu' ] );
-        add_action( 'admin_enqueue_scripts', [ static::class, 'loadResources' ] );
+        add_action( 'admin_menu', [ 'AnnotoAdmin', 'loadMenu' ] );
+        add_action( 'admin_enqueue_scripts', [ 'AnnotoAdmin', 'loadResources' ] );
     }
 
     /**
@@ -55,7 +55,7 @@ class AnnotoAdmin {
             __( 'Annoto', 'annoto' ),
              'manage_options' ,
             'annoto-key-config',
-            [ self::class, 'displaySettingsPage']
+            [ 'AnnotoAdmin', 'displaySettingsPage']
         );
     }
 
