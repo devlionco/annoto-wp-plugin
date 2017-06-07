@@ -23,7 +23,7 @@ jQuery( function ( $ ) {
             function( data ) {
                 var playerId = '';
 
-                $('article iframe').each(function () {
+                $('body iframe').each(function () {
                     if ( this.src.indexOf( data[ 'player-type' ] ) !== -1 && typeof this.id !== 'undefined' ) {
                         playerId = this.id;
                         return false;
