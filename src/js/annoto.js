@@ -14,7 +14,7 @@ jQuery( function ( $ ) {
         if (response.status === 'success') {
             getSettingsDeferred.resolve(response.data);
         } else {
-            getSettingsDeferred.reject('WP Server: Fetching of the Annoto settings has been failed!');
+            getSettingsDeferred.reject('WP Server: Fetching of the Annoto settings has failed!');
         }
     });
 
@@ -43,6 +43,11 @@ jQuery( function ( $ ) {
         .then(
             function ( configData ) {
 
+                if ( !configData ) {
+                    console && console.error('Annoto Plugin: settings missing.');
+                    return;
+                }
+
                 if ( configData.playerId.length === 0 ) {
                     console && console.error('Annoto Plugin: Can\'t determine the player ID.');
                     return;
@@ -59,14 +64,24 @@ jQuery( function ( $ ) {
                     console && console.warn('Annoto Plugin: Plugin boot in the Demo Mode.');
                 }
 
+                $( '#' + configData.playerId ).after('<div id="annoto-app"></div>');
+
                 var config = {
                     clientId: configData.settings['api-key'],
                     position: configData.settings['widget-position'],
+                    align: {
+                        vertical: configData.settings['widget-align-vertical'],
+                        horizontal: configData.settings['widget-align-horizontal']
+                    },
+                    width: {
+                        max: configData.settings['widget-max-width']
+                    },
                     widgets: [
                         {
                             player: {
                                 type: configData.settings['player-type'],
-                                element: configData.playerId
+                                element: configData.playerId,
+                                params: configData.settings['player-params']
                             },
                             timeline: {
                                 embedded: false
