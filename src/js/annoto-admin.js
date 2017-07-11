@@ -131,6 +131,9 @@ jQuery(document).ready( function ( $ ) {
                 $( '#sso-secret' ).prop('disabled', false);
             }
         },
+        toggleAdvancedSettings: function (onOff) {
+            $( '.annoto-advanced-settings-container' ).toggle(onOff);
+        },
         sendToServer: function () {
             if ( this.isDataChanged() && this.isValid() ) {
 
@@ -209,6 +212,10 @@ jQuery(document).ready( function ( $ ) {
     $( '#sso-support' ).change( function () {
         toggleDisabledInputs.ssoSupport();
         settingForm.disableDemoIfSsoOn( this );
+    } );
+
+    $( '#annoto-advanced-settings-switch' ).change( function () {
+        settingForm.toggleAdvancedSettings( this[0].checked );
     } );
 
     $( '.dropdown-menu a' ).click( function () {

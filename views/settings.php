@@ -152,7 +152,26 @@
                                             >
                                         </div>
                                     </div>
-                                </div>
+									<div class="form-group top-buffer">
+                                        <label class="control-label col-sm-3" for="demo-mode">Advanced Setting</label>
+                                        <div class="col-sm-9 text-left">
+                                            <label class="annoto-switch">
+                                                <input
+                                                        type="checkbox"
+                                                        name="annoto-advanced-settings-switch"
+                                                        id="annoto-advanced-settings-switch"
+                                                >
+                                                <div class="annoto-slider round"></div>
+                                            </label>
+                                        </div>									
+									</div>
+									<div class="form-group top-buffer annoto-advanced-settings-container">
+									    <!--> put settings control here <-->
+									</div>
+									<div class="form-group top-buffer annoto-advanced-settings-container">
+									    <!--> put settings control here <-->
+									</div>
+								</div>
                             </div>
                         </div>
                         <div class="col-sm-6" id="credentialBlock">
