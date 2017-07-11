@@ -65,7 +65,7 @@
                                         </div>
                                     </div>
                                   
-				    <div class="form-group top-buffer">
+									<div class="form-group top-buffer">
                                         <label class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label" for="player-type">
                                             Player Type
                                         </label>
@@ -87,10 +87,12 @@
                                     </div>
 					
 									
-									  <div class="checkbox annoto-advance-player-params" style="margin-left">
-      <label class="col-sm-7"><input type="checkbox" id="vimeo-premium-player" class="setting-data" for="vimeo-premium-player">Premium player</label>
-  </div>
-<div class="form-group top-buffer" style="display: block;">
+									<div class="checkbox checkbox-primary annoto-player-params" id="annoto-vimeo-player-params">
+										<input type="checkbox" id="vimeo-premium-player" class="setting-data" for="vimeo-premium-player">
+										<label class="col-sm-7">Premium Vimeo player (no Logo)</label>
+									</div>
+									
+								<div class="form-group top-buffer" style="display: block;">
 									     <div class="panel-body panel-settings">
                                     <div class="form-group top-buffer">
                                         <label class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label" for="demo-mode">Advanced Setting</label>
@@ -134,7 +136,7 @@
                                                 <ul class="dropdown-menu" data-btn-id="widget-align-horizontal">
                                                     <li><a href="#" name="screen_edge">Screen Edge</a></li>
                                                     <li><a href="#" name="element_edge">Element edge</a></li>
-  						    <li><a href="#" name="center">Center</a></li>
+													<li><a href="#" name="center">Center</a></li>
                                                 </ul>
                                             </div>
                                             <input type="hidden" class="setting-data" name="widget-align-horizontal" value="">
@@ -145,13 +147,13 @@
                                             Widget width
                                         </label>
                                         <div class="col-lg-9 col-xs-12">
-					  <input type="number" name="widget-width" value="300">
-					  <input type="hidden" class="setting-data" name="widget-width" value="">    
+											<input type="number" name="widget-width" value="300">
+											<input type="hidden" class="setting-data" name="widget-width" value="">    
                                         </div>
                                     </div>
 					
                                 </div>
-									</div>
+							</div>
 									
 								</div>
                             </div>

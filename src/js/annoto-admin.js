@@ -134,6 +134,13 @@ jQuery(document).ready( function ( $ ) {
         toggleAdvancedSettings: function (onOff) {
             $( '.annoto-advanced-settings-container' ).toggle(onOff);
         },
+        playerParamsSettings: function (selectionElement, playerType) {
+            $( '.annoto-player-params' ).hide();
+
+            if (playerType === 'vimeo') {
+                $( '#annoto-vimeo-player-params' ).show();
+            }
+        },
         sendToServer: function () {
             if ( this.isDataChanged() && this.isValid() ) {
 
@@ -222,6 +229,9 @@ jQuery(document).ready( function ( $ ) {
         var buttonId = $( this ).closest( 'ul' ).data( 'btnId' );
         $( '#' + buttonId ).text( this.innerText );
         $( 'input.setting-data[name=' + buttonId + ']').val( this.name );
+        if (buttonId === 'player-type') {
+            settingForm.playerParamsSettings( this, this.name );
+        }
     } );
 
     $('#credentialBlock').click( function () {
