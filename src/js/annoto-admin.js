@@ -14,6 +14,15 @@ jQuery(document).ready( function ( $ ) {
             'rtl-support': {
                 0: 'En',
                 1: 'He'
+            },
+            'widget-align-vertical': {
+                center: 'Center',
+                bottom: 'Bottom',
+                top : 'Top'
+            },
+            'widget-align-horizontal': {
+                screen_edge : 'Edge of Screen',
+                element_edge: 'Edge of Player'
             }
         },
         getOutputText: function(fieldName, valueName) {
@@ -23,48 +32,82 @@ jQuery(document).ready( function ( $ ) {
 
     var toggleDisabledInputs = {
         ssoSupport: function () {
-            var ssoSecretInput = $('#sso-secret');
-            this.isSsoSecretEnabled() ? ssoSecretInput.prop('disabled', false) : ssoSecretInput.prop('disabled', true);
+            var ssoSecretInput = $( '#sso-secret' );
+            this.isSsoSecretEnabled() ? ssoSecretInput.prop( 'disabled', false ) : ssoSecretInput.prop( 'disabled', true );
         },
         ssoSecret: function () {
-            var apiKeyInput = $('#api-key'),
-                ssoSecretInput = $('#sso-secret');
+            var apiKeyInput = $( '#api-key' ),
+                ssoSecretInput = $( '#sso-secret' );
 
-            $('#demo-mode')[0].checked ? apiKeyInput.prop('disabled', true) : apiKeyInput.prop('disabled', false);
-            this.isSsoSecretEnabled() ? ssoSecretInput.prop('disabled', false) : ssoSecretInput.prop('disabled', true);
+            $( '#demo-mode' )[0].checked ? apiKeyInput.prop( 'disabled', true ) : apiKeyInput.prop( 'disabled', false );
+            this.isSsoSecretEnabled() ? ssoSecretInput.prop( 'disabled', false ) : ssoSecretInput.prop( 'disabled', true );
         },
         isSsoSecretEnabled: function () {
-            return false === $('#demo-mode')[0].checked && $('#sso-support')[0].checked;
+            return false === $( '#demo-mode' )[0].checked && $( '#sso-support' )[0].checked;
+        },
+        advancedSettingsSupport : function () {
+            this.isAdvancedSettingsEnabled() ? this.toggleAdvancedSettingsContainer(true) : this.toggleAdvancedSettingsContainer(false);
+        },
+        isAdvancedSettingsEnabled : function () {
+            return $( '#annoto-advanced-settings-switch' )[0].checked;
+        },
+        toggleAdvancedSettingsContainer: function (onOff) {
+            $( '.annoto-advanced-settings-container' ).toggle(onOff);
+        },
+        togglePlayerSettings: function () {
+            var playerType = $( '#player-type-value' ).val();
+            $( '.annoto-player-params' ).hide();
+
+            if ( playerType === 'vimeo' ) {
+                $( '.annoto-player-params' ).show();
+            }
         },
         all: function () {
             this.ssoSupport();
             this.ssoSecret();
+            this.advancedSettingsSupport();
+            this.togglePlayerSettings();
         }
     };
 
-    var settingsFromServer = JSON.parse($('#settingsFromServer').val());
+    var settingsFromServer = JSON.parse( $( '#settingsFromServer' ).val());
 
     var settingForm = {
         formId: '#settingForm',
         gatheredData: function () {
             var settingData = {};
+            settingData[ 'annoto-player-params' ] = {};
 
             $( this.formId ).find( 'input.setting-data' ).each( function () {
-                settingData[ this.name ] = $( this ).val();
 
-                if ( this.name === 'rtl-support' ) {
-                    settingData[ this.name ] = Number( $( this ).val() );
+                switch ( $( this ).data( 'type' ) ) {
+                    case 'number':
+                        settingData[ this.name ] = Number( $( this ).val() );
+                        break;
+                    default:
+                        settingData[ this.name ] = $( this ).val();
+                        break;
                 }
 
                 if ( this.type === 'checkbox' ) {
-                    settingData[ this.name ] = Number( $( this )[0].checked );
+                    settingData[ this.name] = Number($(this)[0].checked);
+                    if ($( this ).data('player-params')) {
+                        settingData[ 'annoto-player-params' ][ JSON.stringify(($( this ).data('player-params').name)) ] = Boolean(settingData[ this.name ]).toString();
+                    }
+                } else {
+                    if ($( this ).data('player-params')) {
+                        settingData[ 'annoto-player-params' ][ $( this ).data('player-params').name ] = settingData[ this.name ];
+                    }
                 }
+
+
+
             });
 
             return settingData;
         },
         isDataChanged: function () {
-             return JSON.stringify(this.gatheredData()) !== JSON.stringify(settingsFromServer);
+            return JSON.stringify(this.gatheredData()) !== JSON.stringify(settingsFromServer);
         },
         isValid: function () {
             var ssoSecreteField = $('input#sso-secret');
@@ -129,16 +172,6 @@ jQuery(document).ready( function ( $ ) {
                 $( '#demo-mode' )[0].checked = false;
                 $( '#api-key' ).prop('disabled', false);
                 $( '#sso-secret' ).prop('disabled', false);
-            }
-        },
-        toggleAdvancedSettings: function (onOff) {
-            $( '.annoto-advanced-settings-container' ).toggle(onOff);
-        },
-        playerParamsSettings: function (selectionElement, playerType) {
-            $( '.annoto-player-params' ).hide();
-
-            if (playerType === 'vimeo') {
-                $( '#annoto-vimeo-player-params' ).show();
             }
         },
         sendToServer: function () {
@@ -222,7 +255,7 @@ jQuery(document).ready( function ( $ ) {
     } );
 
     $( '#annoto-advanced-settings-switch' ).change( function () {
-        settingForm.toggleAdvancedSettings( this[0].checked );
+        toggleDisabledInputs.toggleAdvancedSettingsContainer( this.checked );
     } );
 
     $( '.dropdown-menu a' ).click( function () {
@@ -230,7 +263,7 @@ jQuery(document).ready( function ( $ ) {
         $( '#' + buttonId ).text( this.innerText );
         $( 'input.setting-data[name=' + buttonId + ']').val( this.name );
         if (buttonId === 'player-type') {
-            settingForm.playerParamsSettings( this, this.name );
+            toggleDisabledInputs.togglePlayerSettings();
         }
     } );
 

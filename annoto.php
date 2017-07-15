@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Annoto
-Plugin URI:  http://www.annoto.net/
+Plugin URI:  https://www.annoto.net/
 Description: WP plugin for Annoto
-Version:     0.1
-Author:      Dima Stelmakh (Andersen)
-Author URI:  https://www.andersenlab.com/
+Version:     1.0
+Author:      Annoto Team
+Author URI:  https://www.annoto.net/
 Text Domain: annoto
 License:     GPLv3
 
@@ -24,7 +24,7 @@ along with Annoto Plugin. If not, see https://www.gnu.org/licenses/quick-guide-g
 */
 
 /** ANNOTO_VERSION version - of the Annoto plugin */
-define( 'ANNOTO_VERSION', '0.1' );
+define( 'ANNOTO_VERSION', '1.0' );
 
 /** ANNOTO_MINIMUM_WP_VERSION - minimum required version of the WordPress */
 define( 'ANNOTO_MINIMUM_WP_VERSION', '4.7' );

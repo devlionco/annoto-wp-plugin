@@ -11,7 +11,10 @@ class AnnotoAdmin {
     public static $intConfigValueNames = [
         'sso-support',
         'demo-mode',
-        'rtl-support'
+        'rtl-support',
+		'widget-max-width',
+		'annoto-advanced-settings-switch',
+		'annoto-vimeo-premium-player'
     ];
 
     /**

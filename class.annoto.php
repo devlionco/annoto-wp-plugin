@@ -16,12 +16,18 @@ class Annoto {
     /** @var array $defaultSettingValues */
     private static $defaultSettingValues = [
         'sso-support' => 0,
-        'demo-mode' =>  0,
+        'demo-mode' =>  1,
+		'annoto-advanced-settings-switch' => 0,
         'widget-position' => 'right',
         'rtl-support' => 0,
         'player-type' => 'youtube',
+		'annoto-vimeo-premium-player' => 0,
         'sso-secret' => '',
-        'api-key' => ''
+        'api-key' => '',
+		'widget-max-width' =>	'300',
+		'widget-align-vertical' => 'center',
+		'widget-align-horizontal' => 'center',
+		'annoto-player-params' => '{}'
     ];
 
     /**

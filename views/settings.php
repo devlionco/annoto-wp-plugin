@@ -13,7 +13,8 @@
             <span> Error message </span>
         </div>
     </div>
-    <input type="hidden" name="settings-from-server" id="settingsFromServer" value="{&quot;widget-position&quot;:&quot;right&quot;,&quot;rtl-support&quot;:1,&quot;player-type&quot;:&quot;vimeo&quot;,&quot;demo-mode&quot;:1,&quot;api-key&quot;:&quot;&quot;,&quot;sso-support&quot;:0,&quot;sso-secret&quot;:&quot;&quot;}">
+	<input type="hidden" name="settings-from-server" id="settingsFromServer" value='<?php echo json_encode(get_option('annoto_settings')); ?>'>
+    
     <div class="col-sm-push-2 col-sm-8">
         <div class="panel panel-primary annoto-panel">
             <div class="panel-heading text-center">
@@ -61,7 +62,7 @@
                                                     <li><a href="#" name="1">He</a></li>
                                                 </ul>
                                             </div>
-                                            <input type="hidden" class="setting-data is-dropdown" name="rtl-support" value="1">
+                                            <input type="hidden" class="setting-data is-dropdown" name="rtl-support" data-type="number" value="1">
                                         </div>
                                     </div>
                                   
@@ -81,28 +82,28 @@
                                                     <li><a href="#" name="vimeo">Vimeo</a></li>
                                                 </ul>
                                             </div>
-                                            <input type="hidden" class="setting-data is-dropdown" name="player-type" value="vimeo">
+                                            <input type="hidden" class="setting-data is-dropdown" id="player-type-value" name="player-type" value="vimeo">
                                         </div>
 										
                                     </div>
-					
-									
-									<div class="checkbox checkbox-primary annoto-player-params" id="annoto-vimeo-player-params">
-										<input type="checkbox" id="vimeo-premium-player" class="setting-data" for="vimeo-premium-player">
-										<label class="col-sm-7">Premium Vimeo player (no Logo)</label>
+									<div class="form-group">
+										<div class="checkbox checkbox-primary annoto-player-params ">
+											<input type="checkbox" id="annoto-vimeo-premium-player" name="annoto-vimeo-premium-player" class="setting-data" data-player-params='{"name":"noLogo"}'>
+											<label class="control-label " id="annoto-vimeo-premium-player" for="annoto-vimeo-premium-player">Premium Vimeo player (no Logo)</label>
+										</div>
 									</div>
-									
-								<div class="form-group top-buffer" style="display: block;">
-									     <div class="panel-body panel-settings">
-                                    <div class="form-group top-buffer">
-                                        <label class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label" for="demo-mode">Advanced Setting</label>
-                                        <div class="col-lg-9 col-xs-12">
-                                            <label class="annoto-switch">
-                                                <input type="checkbox" name="annoto-advanced-settings-switch" id="annoto-advanced-settings-switch">
+								<div class="form-group top-buffer"">
+									<div class="panel-body panel-settings">
+										<div class="form-group top-buffer">
+											<label class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label" for="annoto-advanced-settings-switch">Advanced Setting</label>
+												<div class="col-sm-14 text-center">
+													<label class="annoto-switch">
+													<input type="checkbox"  class="setting-data" name="annoto-advanced-settings-switch" id="annoto-advanced-settings-switch" data-type="number" value="0">
                                                 <div class="annoto-slider round"></div>
                                             </label>
                                         </div>									
-									</div><div class="form-group top-buffer annoto-advanced-settings-container" style="display: block;">
+									</div>
+									<div class="form-group top-buffer annoto-advanced-settings-container" >
                                         <label class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label" for="widget-align-vertical">
                                             Vertical alignment
                                         </label>
@@ -119,10 +120,10 @@
                                                     <li><a href="#" name="top">Top</a></li>
                                                 </ul>
                                             </div>
-                                            <input type="hidden" class="setting-data" name="widget-align-vertical" value="">
+                                            <input type="hidden" class="setting-data is-dropdown" name="widget-align-vertical" value="top">
                                         </div>
                                     </div>
-                                    <div class="form-group top-buffer annoto-advanced-settings-container" style="display: block;">
+                                    <div class="form-group top-buffer annoto-advanced-settings-container" >
                                         <label class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label" for="widget-align-horizontal">
                                             Horizontal alignment
                                         </label>
@@ -134,21 +135,21 @@
                                                     <span class="sr-only">Toggle Dropdown</span>
                                                 </button>
                                                 <ul class="dropdown-menu" data-btn-id="widget-align-horizontal">
-                                                    <li><a href="#" name="screen_edge">Screen Edge</a></li>
-                                                    <li><a href="#" name="element_edge">Element edge</a></li>
+                                                    <li><a href="#" name="screen_edge">Edge of Screen</a></li>
+                                                    <li><a href="#" name="element_edge">Edge of Player</a></li>
 													<li><a href="#" name="center">Center</a></li>
                                                 </ul>
                                             </div>
-                                            <input type="hidden" class="setting-data" name="widget-align-horizontal" value="">
+                                            <input type="hidden" class="setting-data is-dropdown" name="widget-align-horizontal" value="center">
                                         </div>
                                     </div>
-                                    <div class="form-group top-buffer annoto-advanced-settings-container" style="display: block;">
-                                        <label class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label" for="widget-width">
+                                    <div class="form-group top-buffer annoto-advanced-settings-container" >
+                                        <label class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label" for="widget-max-width">
                                             Widget width
                                         </label>
                                         <div class="col-lg-9 col-xs-12">
-											<input type="number" name="widget-width" value="300">
-											<input type="hidden" class="setting-data" name="widget-width" value="">    
+											<input type="number" name="widget-max-width" value="300">
+											<input type="hidden" class="setting-data" name="widget-max-width" data-type="number" value="300">
                                         </div>
                                     </div>
 					
@@ -165,7 +166,7 @@
                                         <label class="control-label col-sm-3" for="demo-mode">Demo Mode</label>
                                         <div class="col-sm-9 text-left">
                                             <label class="annoto-switch">
-                                                <input type="checkbox" class="setting-data" name="demo-mode" id="demo-mode" value="1">
+                                                <input type="checkbox" class="setting-data" name="demo-mode" id="demo-mode" data-type="number" value="1">
                                                 <div class="annoto-slider round"></div>
                                             </label>
                                         </div>
@@ -182,7 +183,7 @@
                                         <label class="control-label col-sm-3" for="sso-support">SSO Support</label>
                                         <div class="col-sm-9 text-left">
                                             <label class="annoto-switch">
-                                                <input class="setting-data" type="checkbox" name="sso-support" id="sso-support" value="0">
+                                                <input class="setting-data" type="checkbox" name="sso-support" id="sso-support" data-type="number" value="0">
                                                 <div class="annoto-slider round"></div>
                                             </label>
                                         </div>

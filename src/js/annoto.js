@@ -67,21 +67,14 @@ jQuery( function ( $ ) {
                 $( '#' + configData.playerId ).after('<div id="annoto-app"></div>');
 
                 var config = {
-                    clientId: configData.settings['api-key'],
-                    position: configData.settings['widget-position'],
-                    align: {
-                        vertical: configData.settings['widget-align-vertical'],
-                        horizontal: configData.settings['widget-align-horizontal']
-                    },
-                    width: {
-                        max: configData.settings['widget-max-width']
-                    },
+                    clientId: configData.settings[ 'api-key' ],
+                    position: configData.settings[ 'widget-position' ],
+
                     widgets: [
                         {
                             player: {
-                                type: configData.settings['player-type'],
+                                type: configData.settings[ 'player-type' ],
                                 element: configData.playerId,
-                                params: configData.settings['player-params']
                             },
                             timeline: {
                                 embedded: false
@@ -89,9 +82,24 @@ jQuery( function ( $ ) {
                         }
                     ],
                     simple: true,
-                    rtl: Boolean( configData.settings['rtl-support'] ),
-                    demoMode: Boolean( configData.settings['demo-mode'] )
+                    rtl: Boolean( configData.settings[ 'rtl-support' ] ),
+                    demoMode: Boolean( configData.settings[ 'demo-mode' ] )
                 };
+
+                if(configData.settings[ 'annoto-advanced-settings-switch' ])
+                {
+                    config.align = {
+                        vertical: configData.settings[ 'widget-align-vertical' ],
+                        horizontal: configData.settings[ 'widget-align-horizontal' ]
+                    };
+                    config.width = { max: configData.settings[ 'widget-max-width' ] };
+                }
+
+
+                if(configData.settings[ 'player-type' ] === 'vimeo')
+                {
+                    config.widgets[0].player.params=configData.settings[ 'annoto-player-params' ];
+                }
 
 
                 if ( ! window.Annoto ) {
