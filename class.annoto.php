@@ -18,6 +18,7 @@ class Annoto {
         'sso-support' => 0,
         'demo-mode' =>  1,
 		'annoto-advanced-settings-switch' => 0,
+		'annoto-timeline-overlay-switch' => 0,
         'widget-position' => 'right',
         'rtl-support' => 0,
         'player-type' => 'youtube',

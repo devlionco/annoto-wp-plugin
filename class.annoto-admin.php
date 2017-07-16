@@ -14,6 +14,7 @@ class AnnotoAdmin {
         'rtl-support',
 		'widget-max-width',
 		'annoto-advanced-settings-switch',
+		'annoto-timeline-overlay-switch',
 		'annoto-vimeo-premium-player'
     ];
 

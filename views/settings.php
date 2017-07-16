@@ -99,10 +99,10 @@
 												<div class="col-sm-14 text-center">
 													<label class="annoto-switch">
 													<input type="checkbox"  class="setting-data" name="annoto-advanced-settings-switch" id="annoto-advanced-settings-switch" data-type="number" value="0">
-                                                <div class="annoto-slider round"></div>
-                                            </label>
-                                        </div>									
-									</div>
+														<div class="annoto-slider round"></div>
+													</label>
+												</div>									
+										</div>
 									<div class="form-group top-buffer annoto-advanced-settings-container" >
                                         <label class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label" for="widget-align-vertical">
                                             Vertical alignment
@@ -152,12 +152,19 @@
 											<input type="hidden" class="setting-data" name="widget-max-width" data-type="number" value="300">
                                         </div>
                                     </div>
-					
+									<div class="form-group top-buffer">
+											<label class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label" for="annoto-timeline-overlay-switch">Timeline Overlay</label>
+												<div class="col-sm-14 text-center">
+													<label class="annoto-switch">
+													<input type="checkbox"  class="setting-data" name="annoto-timeline-overlay-switch" id="annoto-timeline-overlay-switch" data-type="number" value="0">
+														<div class="annoto-slider round"></div>
+													</label>
+												</div>									
+									</div>
                                 </div>
 							</div>
-									
-								</div>
-                            </div>
+							</div>
+                        </div>
                         </div>
                         <div class="col-sm-6" id="credentialBlock">
                             <div class="panel panel-white api-key">

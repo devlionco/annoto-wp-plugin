@@ -77,7 +77,8 @@ jQuery( function ( $ ) {
                                 element: configData.playerId,
                             },
                             timeline: {
-                                embedded: false
+                                embedded: false,
+                                overlayVideo : Boolean( configData.settings[ 'annoto-timeline-overlay-switch' ] )
                             }
                         }
                     ],
@@ -94,7 +95,6 @@ jQuery( function ( $ ) {
                     };
                     config.width = { max: configData.settings[ 'widget-max-width' ] };
                 }
-
 
                 if(configData.settings[ 'player-type' ] === 'vimeo')
                 {
