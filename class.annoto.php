@@ -36,6 +36,7 @@ class Annoto {
      */
     public static function init()
     {
+        do_action( 'qm/debug', 'init' );
         if ( ! static::$initiated ) {
             static::init_hooks();
         }
@@ -57,10 +58,11 @@ class Annoto {
     {
         static::$initiated = true;
 
+        do_action( 'qm/debug', 'init_hooks' );
         static::loadResources();
 
         add_action( 'wp_loaded', static::setCurrentUser() );
-        add_filter('embed_oembed_html', [ 'Annoto', 'prepareVideoIFrameAttributes' ], 10, 3);
+        add_filter( 'embed_oembed_html', [ 'Annoto', 'prepareVideoIFrameAttributes' ], 9999, 3 );
     }
 
     /**
@@ -68,6 +70,7 @@ class Annoto {
      */
     public static function loadResources()
     {
+        do_action( 'qm/debug', 'loadResources' );
         wp_register_script(
             'annoto-bootstrap.js',
             'https://app.annoto.net/annoto-bootstrap.js',
@@ -150,12 +153,15 @@ class Annoto {
      */
     public static function prepareVideoIFrameAttributes( $html, $url, $attr )
     {
+        do_action( 'qm/debug', 'prepareVideoIFrameAttributes' );
         if ( empty( $attr['id'] ) ) {
+            do_action( 'qm/debug', 'prepareVideoIFrameAttributes: no id, generating' );
             $uniqueId = uniqid('annoto_', true);
             $html = str_replace( '<iframe', sprintf( '<iframe id="%s"', $uniqueId ), $html );
         }
 
-        if ( strpos( $html, 'youtube' ) && !strpos( $html, 'enablejsapi=1' ) ) {
+        if ( strpos( $url, 'youtube' ) && !strpos( $html, 'enablejsapi=1' ) ) {
+            do_action( 'qm/debug', 'prepareVideoIFrameAttributes: no enablejsapi, adding' );
             $html = str_replace( 'feature=oembed', 'feature=oembed&enablejsapi=1', $html );
         }
 
