@@ -24,7 +24,7 @@ jQuery( function ( $ ) {
                 var playerId = '';
                 
                 $('body iframe').each(function () {
-                    if ( this.src.indexOf( data[ 'player-type' ] ) !== -1 && typeof this.id !== 'undefined' ) {
+                    if ( this.src.indexOf( data[ 'player-type' ] ) !== -1 && typeof this.id !== 'undefined' && this.id !== '' ) {
                         playerId = this.id;
                         return false;
                     }
@@ -105,13 +105,6 @@ jQuery( function ( $ ) {
                 if ( ! window.Annoto ) {
                     console && console.error( 'Annoto: not loaded' );
                     return;
-                }
-
-                var playerType = configData.settings[ 'player-type' ];
-                if (playerType === 'youtube' && window.YT && window.YT.get) {
-                    var params = config.widgets[0].player.params || {};
-                    config.widgets[0].player.params = params;
-                    params.playerApi = window.YT.get(configData.playerId) || new window.YT.Player(configData.playerId, { playerVars: { enablejsapi: 1 } });
                 }
 
                 window.Annoto.on( 'ready', function ( api ) {
