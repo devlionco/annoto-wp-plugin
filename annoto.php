@@ -1,9 +1,9 @@
 <?php
-/*
+/**
 Plugin Name: Annoto
 Plugin URI:  https://www.annoto.net/
 Description: WP plugin for Annoto
-Version:     1.5
+Version:     2.0
 Author:      Annoto Team
 Author URI:  https://www.annoto.net/
 Text Domain: annoto
@@ -24,7 +24,7 @@ along with Annoto Plugin. If not, see https://www.gnu.org/licenses/quick-guide-g
 */
 
 /** ANNOTO_VERSION version - of the Annoto plugin */
-define( 'ANNOTO_VERSION', '1.5' );
+define( 'ANNOTO_VERSION', '2.0' );
 
 /** ANNOTO_MINIMUM_WP_VERSION - minimum required version of the WordPress */
 define( 'ANNOTO_MINIMUM_WP_VERSION', '4.7' );
@@ -38,16 +38,16 @@ define( 'ANNOTO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 /** ANNOTO_SETTING_KEY_NAME - name of the key of the plugin settings in DB */
 define( 'ANNOTO_SETTING_KEY_NAME', 'annoto_settings' );
 
-require_once( ANNOTO_PLUGIN_DIR . 'class.annoto.php' );
+require_once ANNOTO_PLUGIN_DIR . 'class.annoto.php';
 
 register_activation_hook( __FILE__, array( 'Annoto', 'plugin_activation' ) );
 register_deactivation_hook( __FILE__, array( 'Annoto', 'plugin_deactivation' ) );
 
 if ( is_admin() ) {
-    require_once( ANNOTO_PLUGIN_DIR . 'class.annoto-admin.php' );
-    add_action( 'init', [ 'AnnotoAdmin', 'init' ] );
+	require_once ANNOTO_PLUGIN_DIR . 'class.annoto-admin.php';
+	add_action( 'init', array( 'AnnotoAdmin', 'init' ) );
 } else {
-    add_action( 'init', [ 'Annoto', 'init' ] );
+	add_action( 'init', array( 'Annoto', 'init' ) );
 }
 
 
