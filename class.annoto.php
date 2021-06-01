@@ -33,6 +33,7 @@ class Annoto {
 		'overlayMode'                     => 'element_edge',
 		'zindex'                          => '100',
         'widget-features-private'         => 1,
+        'deploymentDomain'                => 'euregion',
 	);
 
 	/**
@@ -162,6 +163,12 @@ class Annoto {
 			$plugin_settings['position']      = $widgetposition;
 			$plugin_settings['alignVertical'] = $widgetverticalalign;
 			$plugin_settings['loginUrl']      = wp_login_url();
+
+            if ($plugin_settings['deploymentDomain'] == 'euregion' || $plugin_settings['deploymentDomain'] == '') {
+                $plugin_settings['deploymentDomain'] = 'annoto.net';
+            } else if ($plugin_settings['deploymentDomain'] == 'usregion') {
+                $plugin_settings['deploymentDomain'] = 'us.annoto.net';
+            }
 
 			echo wp_json_encode(
 				array(

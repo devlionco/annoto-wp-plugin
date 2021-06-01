@@ -154,6 +154,32 @@
 										</div>
 									</div>
 
+									<div class="form-group top-buffer">
+										<label class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label"
+											for="deploymentDomain">
+											Deployment domain
+										</label>
+										<div class="col-lg-9 col-xs-12">
+											<div class="btn-group">
+												<button type="button" id="deploymentDomain"
+													class="btn btn-default annoto-dropdown-button">
+													EU region
+												</button>
+												<button type="button" class="btn btn-default dropdown-toggle"
+													data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+													<span class="caret"></span>
+													<span class="sr-only">Toggle Dropdown</span>
+												</button>
+												<ul class="dropdown-menu" data-btn-id="deploymentDomain">
+													<li><a href="#" name="euregion">EU region</a></li>
+													<li><a href="#" name="usregion">US region</a></li>
+												</ul>
+											</div>
+											<input type="hidden" class="setting-data is-dropdown" name="deploymentDomain"
+												value="euregion" />
+										</div>
+									</div>
+
 								</div>
 							</div>
 						</div>

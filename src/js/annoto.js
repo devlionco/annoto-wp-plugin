@@ -90,6 +90,7 @@ jQuery(
 			config.position  = params["position"];
 			config.demoMode  = Boolean( params["demo-mode"] );
 			config.locale    = params["locale"];
+			config.deploymentDomain    = params["deploymentDomain"];
 
 			features.tabs  = Boolean( params["widget-features-tabs"] );
 			align.vertical = params["alignVertical"];
@@ -265,6 +266,7 @@ jQuery(
 
 				var config = {
 					clientId: configData.settings["api-key"],
+					deploymentDomain: configData.settings["deploymentDomain"],
 					position: configData.settings["position"],
 					widgets: [
 					{

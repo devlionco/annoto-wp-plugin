@@ -33,7 +33,11 @@ jQuery( document ).ready(
 					auto: 'Auto',
 					inner: 'On top of Player',
 					element_edge: 'Next to Player',
-				}
+				},
+				'deploymentDomain': {
+					euregion: 'EU region',
+					usregion: 'US region',
+				},
 			},
 			getOutputText: function (fieldName, valueName) {
 				return this.mappingData[fieldName][valueName];
