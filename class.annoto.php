@@ -32,6 +32,7 @@ class Annoto {
 		'annoto-player-params'            => '{}',
 		'overlayMode'                     => 'element_edge',
 		'zindex'                          => '100',
+        'widget-features-private'         => 1,
 	);
 
 	/**
@@ -140,7 +141,7 @@ class Annoto {
 
 			unset( $plugin_settings['sso-secret'] );
 
-			if ( 'auto' === $plugin_settings['locale'] ) {
+			if ( 'auto' === $plugin_settings['locale'] || '' === $plugin_settings['locale'] ) {
 				$plugin_settings['locale'] = substr( get_locale(), 0, 2 );
 			}
 			if ( 'he' === $plugin_settings['locale'] ) {
@@ -161,7 +162,6 @@ class Annoto {
 			$plugin_settings['position']      = $widgetposition;
 			$plugin_settings['alignVertical'] = $widgetverticalalign;
 			$plugin_settings['loginUrl']      = wp_login_url();
-			$plugin_settings['privateThread'] = true;
 
 			echo wp_json_encode(
 				array(

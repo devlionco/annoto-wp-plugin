@@ -141,6 +141,19 @@
 												name="zindex" value="100" />
 										</div>
 									</div>
+
+									<div class="form-group top-buffer annoto-features-settings-container">
+										<label class="control-label col-lg-3 col-lg-push-1 col-xs-12 setting-label"
+											for="widget-features-private">Private per course</label>
+										<div class="col-sm-14 text-center">
+											<label class="annoto-switch">
+												<input type="checkbox" class="setting-data" name="widget-features-private"
+													id="widget-features-private" data-type="number" value="1" />
+												<div class="annoto-slider round"></div>
+											</label>
+										</div>
+									</div>
+
 								</div>
 							</div>
 						</div>

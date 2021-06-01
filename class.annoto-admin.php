@@ -17,6 +17,7 @@ class AnnotoAdmin {
 		// 'annoto-timeline-overlay-switch',
 		'annoto-vimeo-premium-player',
 		'widget-features-tabs',
+		'widget-features-private',
 		'zindex',
 	);
 

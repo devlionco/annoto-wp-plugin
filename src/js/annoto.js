@@ -118,6 +118,17 @@ jQuery(
 			//
 			var params = configparams;
 
+			var postid = '';
+			var cl     = $( document.body )[0].classList;
+			$.each(
+				cl,
+				function( i, val ) {
+					if (/^postid-*/.test( val )) {
+						postid = val.split( '-' )[1];
+					}
+				}
+			);
+
 			var retVal = details || {};
 
 			retVal.title       = retVal.title || params.mediaTitle;
@@ -125,10 +136,11 @@ jQuery(
 			? retVal.description
 			: params.mediaDescription;
 			retVal.group       = {
-				id: params.mediaGroupId,
+				id: postid,
 				type: "playlist",
-				title: params.mediaGroupTitle,
-				privateThread: params.privateThread,
+				title: document.title,
+				description: document.title,
+				privateThread: params['widget-features-private'],
 			};
 
 			return retVal;
@@ -274,7 +286,8 @@ jQuery(
 									id: configData.settings["mediaGroupId"],
 									type: 'playlist',
 									title: configData.settings["mediaGroupTitle"],
-									privateThread: configData.settings["privateThread"],
+									description: configData.settings["mediaGroupTitle"],
+									privateThread: configData.settings["widget-features-private"],
 								}
 							};
 						},
