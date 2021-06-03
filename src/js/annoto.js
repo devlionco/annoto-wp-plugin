@@ -175,54 +175,57 @@ jQuery(
 			return;
 		}
 
-		$.when( getSettingsDeferred )
-		.then(
-			function (data) {
-				var parent   = document.body,
-					h5p      = $( parent ).find( "iframe.h5p-iframe" ).first().get( 0 ),
-					youtube  = $( parent ).find( 'iframe[src*="youtube.com"]' ).first().get( 0 ),
-					vimeo    = $( parent ).find( 'iframe[src*="vimeo.com"]' ).first().get( 0 ),
-					videojs  = $( parent ).find( ".video-js" ).first().get( 0 ),
-					jwplayer = $( parent ).find( ".jwplayer" ).first().get( 0 );
-				if (videojs) {
-					data["mediaTitle"]  = '';
-					playerId            = videojs.id;
-					data["player-type"] = "videojs";
-				} else if (jwplayer) {
-					data["mediaTitle"]  = '';
-					playerId            = jwplayer.id;
-					data["player-type"] = "jw";
-				} else if (h5p) {
-					data["mediaTitle"]  = H5PIntegration.contents['cid-1'].title;
-					playerId            = h5p.id;
-					data["player-type"] = "h5p";
-				} else if (youtube) {
-					data["mediaTitle"]  = youtube.title;
-					playerId            = youtube.id;
-					data["player-type"] = "youtube";
-				} else if (vimeo) {
-					data["mediaTitle"]  = vimeo.title;
-					playerId            = vimeo.id;
-					data["player-type"] = "vimeo";
-				}
+		$.when(getSettingsDeferred)
+			.then(
+				function (data) {
+					var parent = document.body,
+						h5p = $(parent).find("iframe.h5p-iframe").first().get(0),
+						youtube = $(parent).find('iframe[src*="youtube.com"]').first().get(0),
+						vimeo = $(parent).find('iframe[src*="vimeo.com"]').first().get(0),
+						videojs = $(parent).find(".video-js").first().get(0),
+						jwplayer = $(parent).find(".jwplayer").first().get(0);
 
-				var postid = '';
-				var cl     = $( document.body )[0].classList;
-				$.each(
-					cl,
-					function( i, val ) {
-						if (/^postid-*/.test( val )) {
-							postid = val.split( '-' )[1];
-						}
+					var postid = '';
+					var posttitle = '';
+					var article = null;
+
+					if (videojs) {
+						data["mediaTitle"] = '';
+						playerId = videojs.id;
+						data["player-type"] = "videojs";
+						article = videojs.closest('article.post');
+					} else if (jwplayer) {
+						data["mediaTitle"] = '';
+						playerId = jwplayer.id;
+						data["player-type"] = "jw";
+						article = jwplayer.closest('article.post');
+					} else if (h5p) {
+						data["mediaTitle"] = H5PIntegration.contents['cid-1'].title;
+						playerId = h5p.id;
+						data["player-type"] = "h5p";
+						article = h5p.closest('article.post');
+					} else if (youtube) {
+						data["mediaTitle"] = youtube.title;
+						playerId = youtube.id;
+						data["player-type"] = "youtube";
+						article = youtube.closest('article.post');
+					} else if (vimeo) {
+						data["mediaTitle"] = vimeo.title;
+						playerId = vimeo.id;
+						data["player-type"] = "vimeo";
+						article = vimeo.closest('article.post');
 					}
-				);
-				data["mediaGroupId"]    = postid;
-				data["mediaGroupTitle"] = document.title;
 
-				return {
-					playerId: playerId,
-					settings: data,
-				};
+					postid = article.id.split('-')[1];
+					posttitle = $(article).find('header.entry-header h1.entry-title').text();
+
+					data["mediaGroupId"] = postid;
+					data["mediaGroupTitle"] = posttitle;
+
+					return {
+						playerId: playerId,
+						settings: data,
+					};
 			},
 			function (errText) {
 				console && console.error( errText );
