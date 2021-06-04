@@ -119,28 +119,27 @@ jQuery(
 			//
 			var params = configparams;
 
+			let ann = window.moodleAnnoto;
+			var annplayers = Object.keys(ann.kApp.kdpMap).filter((name) => /^kaltura_player_*/.test(name));
+			let annplayer = ann.kApp.kdpMap[annplayers[0]];
 			var postid = '';
-			var cl     = $( document.body )[0].classList;
-			$.each(
-				cl,
-				function( i, val ) {
-					if (/^postid-*/.test( val )) {
-						postid = val.split( '-' )[1];
-					}
-				}
-			);
+			var posttitle = '';
+			var article = null;
+
+			article = $(annplayer.player).closest('article.post');
+			postid = article[0].id.split('-')[1];
+			posttitle = $(article).find('header.entry-header h1.entry-title').text();
 
 			var retVal = details || {};
-
-			retVal.title       = retVal.title || params.mediaTitle;
+			retVal.title = retVal.title || params.mediaTitle;
 			retVal.description = retVal.description
-			? retVal.description
-			: params.mediaDescription;
-			retVal.group       = {
+				? retVal.description
+				: params.mediaDescription;
+			retVal.group = {
 				id: postid,
 				type: "playlist",
-				title: document.title,
-				description: document.title,
+				title: posttitle,
+				description: posttitle,
 				privateThread: params['widget-features-private'],
 			};
 
@@ -267,6 +266,11 @@ jQuery(
 					rtl = true;
 				}
 
+				// LearnDash check.
+				let videotitle = typeof lesson_title !== 'undefined' ? lesson_title : configData.settings["mediaTitle"];
+				let id = typeof course_id !== 'undefined' ? course_id : configData.settings["mediaGroupId"];
+				let grouptitle = typeof course_title !== 'undefined' ? course_title : configData.settings["mediaGroupTitle"];
+
 				var config = {
 					clientId: configData.settings["api-key"],
 					deploymentDomain: configData.settings["deploymentDomain"],
@@ -285,12 +289,12 @@ jQuery(
 						},
 						mediaDetails: function() {
 							return {
-								title: configData.settings["mediaTitle"],
+								title: videotitle,
 								description: configData.settings["mediaTitle"],
 								group: {
-									id: configData.settings["mediaGroupId"],
+									id: id,
 									type: 'playlist',
-									title: configData.settings["mediaGroupTitle"],
+									title: grouptitle,
 									description: configData.settings["mediaGroupTitle"],
 									privateThread: configData.settings["widget-features-private"],
 								}

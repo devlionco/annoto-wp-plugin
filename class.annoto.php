@@ -62,6 +62,39 @@ class Annoto {
 
 		static::load_resources();
 
+		// LearnDash hooks.
+		function get_course_ID() {
+			if (get_post_type() == 'product') {
+				return get_post_meta(get_the_ID(), '_related_course', true)[0];
+			}
+			if (get_post_type() == 'forum') {
+				return get_post_meta(get_the_ID(), '_id_associated_courses', true)[0];
+			}
+			if (get_post_type() == 'topic' || get_post_type() == 'reply') {
+				$forum_id = get_post_meta(get_the_ID(), '_bbp_forum_id', true);
+				return get_post_meta($forum_id, '_id_associated_courses', true)[0];
+			}
+			if (get_post_type() == 'sfwd-topic' || get_post_type() == 'sfwd-quiz') {
+				return get_post_meta(get_the_ID(), 'course_id', true);
+			}
+			return get_the_ID();
+		}
+
+		function wpb_hook_javascript() {
+			if (get_post_type() != 'sfwd-topic' && get_post_type() != 'sfwd-quiz') {
+				return;
+			}
+			update_user_meta(get_current_user_id(), get_course_ID() . 'last_step', get_the_ID());
+			?>
+				<script>
+				var lesson_title = '<?php echo get_the_title(); ?>';
+				var course_id = '<?php echo get_course_ID(); ?>';
+				var course_title = '<?php echo get_the_title(get_course_ID()); ?>';
+				</script>
+				<?php
+		}
+		add_action('wp_head', 'wpb_hook_javascript');
+
 		add_action( 'wp_loaded', static::set_current_user() );
 		add_filter( 'embed_oembed_html', array( 'Annoto', 'prepare_video_iframe_attributes' ), 10, 3 );
 	}
