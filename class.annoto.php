@@ -1,311 +1,379 @@
 <?php
 
-require_once ('class.jwt.php');
+require_once 'class.jwt.php';
 
 /**
  * Class Annoto
  */
 class Annoto {
 
-    /** @var bool $initiated */
-    private static $initiated = false;
+	/** @var bool $initiated */
+	private static $initiated = false;
 
-    /** @var WP_User|null $currentUserIdentity */
-    private static $currentUserIdentity = null;
+	/** @var WP_User|null $current_user_identity */
+	private static $current_user_identity = null;
 
-    /** @var array $defaultSettingValues */
-    private static $defaultSettingValues = [
-        'sso-support' => 0,
-        'demo-mode' =>  1,
+	/** @var array $defaultSettingValues */
+	private static $defaultSettingValues = array(
+		'sso-support'                     => 0,
+		'demo-mode'                       => 1,
 		'annoto-advanced-settings-switch' => 0,
-		'annoto-timeline-overlay-switch' => 0,
-        'widget-position' => 'right',
-        'rtl-support' => 0,
-        'player-type' => 'youtube',
-		'annoto-vimeo-premium-player' => 0,
-        'sso-secret' => '',
-        'api-key' => '',
-		'widget-max-width' =>	'300',
-		'widget-align-vertical' => 'center',
-		'widget-align-horizontal' => 'center',
-		'annoto-player-params' => '{}'
-    ];
+		'annoto-timeline-overlay-switch'  => 0,
+		'widget-position'                 => 'right',
+		'locale'                          => 'auto',
+		'rtl-support'                     => 0,
+		'player-type'                     => 'youtube',
+		'annoto-vimeo-premium-player'     => 0,
+		'sso-secret'                      => '',
+		'api-key'                         => '',
+		'widget-max-width'                => '300',
+		'widget-align-vertical'           => 'center',
+		'widget-align-horizontal'         => 'center',
+		'annoto-player-params'            => '{}',
+		'overlayMode'                     => 'element_edge',
+		'zindex'                          => '100',
+        'widget-features-private'         => 1,
+        'deploymentDomain'                => 'euregion',
+	);
 
-    /**
-     * Init method will initiate all hooks and handle ajax to return settings
-     */
-    public static function init()
-    {
-        do_action( 'qm/debug', 'init' );
-        if ( ! static::$initiated ) {
-            static::init_hooks();
-        }
+	/**
+	 * Init method will initiate all hooks and handle ajax to return settings
+	 */
+	public static function init() {
+		if ( ! static::$initiated ) {
+			static::init_hooks();
+		}
 
-        $post = $_POST;
+		$post = $_POST;
 
-        if (
-            array_key_exists('action', $post)
-            && $post['action'] === 'get-settings'
-        ) {
-            static::getConfigData();
-        }
-    }
+		if (
+			array_key_exists( 'action', $post )
+			&& 'get-settings' === $post['action']
+		) {
+			static::getConfigData();
+		}
+	}
 
-    /**
-     * All hooks to initialize
-     */
-    public static function init_hooks()
-    {
-        static::$initiated = true;
+	/**
+	 * All hooks to initialize
+	 */
+	public static function init_hooks() {
+		static::$initiated = true;
 
-        do_action( 'qm/debug', 'init_hooks' );
-        static::loadResources();
+		static::load_resources();
 
-        add_action( 'wp_loaded', static::setCurrentUser() );
-        add_filter( 'embed_oembed_html', [ 'Annoto', 'prepareVideoIFrameAttributes' ], 9999, 3 );
-    }
+		// LearnDash hooks.
+		function get_course_ID() {
+			if (get_post_type() == 'product') {
+				return get_post_meta(get_the_ID(), '_related_course', true)[0];
+			}
+			if (get_post_type() == 'forum') {
+				return get_post_meta(get_the_ID(), '_id_associated_courses', true)[0];
+			}
+			if (get_post_type() == 'topic' || get_post_type() == 'reply') {
+				$forum_id = get_post_meta(get_the_ID(), '_bbp_forum_id', true);
+				return get_post_meta($forum_id, '_id_associated_courses', true)[0];
+			}
+			if (get_post_type() == 'sfwd-topic' || get_post_type() == 'sfwd-quiz') {
+				return get_post_meta(get_the_ID(), 'course_id', true);
+			}
+			return get_the_ID();
+		}
 
-    /**
-     * Load all sources
-     */
-    public static function loadResources()
-    {
-        do_action( 'qm/debug', 'loadResources' );
-        wp_register_script(
-            'annoto-bootstrap.js',
-            'https://app.annoto.net/annoto-bootstrap.js',
-            [],
-            ANNOTO_VERSION
-        );
-        wp_enqueue_script( 'annoto-bootstrap.js' );
+		function wpb_hook_javascript() {
+			if (get_post_type() != 'sfwd-topic' && get_post_type() != 'sfwd-quiz') {
+				return;
+			}
+			update_user_meta(get_current_user_id(), get_course_ID() . 'last_step', get_the_ID());
+			?>
+				<script>
+				var lesson_title = '<?php echo get_the_title(); ?>';
+				var course_id = '<?php echo get_course_ID(); ?>';
+				var course_title = '<?php echo get_the_title(get_course_ID()); ?>';
+				</script>
+				<?php
+		}
+		add_action('wp_head', 'wpb_hook_javascript');
 
-        wp_register_script(
-            'annoto.js',
-            plugin_dir_url( __FILE__ ) . 'src/js/annoto.js',
-            [ 'jquery' ],
-            ANNOTO_VERSION
-        );
-        wp_enqueue_script( 'annoto.js' );
-    }
+		add_action( 'wp_loaded', static::set_current_user() );
+		add_filter( 'embed_oembed_html', array( 'Annoto', 'prepare_video_iframe_attributes' ), 10, 3 );
+	}
 
-    /**
-     * Setter to store current user to class property
-     */
-    public static function setCurrentUser()
-    {
-        $currentUser = wp_get_current_user();
+	/**
+	 * Load all sources
+	 */
+	public static function load_resources() {
+		wp_register_script(
+			'annoto-bootstrap.js',
+			'https://app.annoto.net/annoto-bootstrap.js',
+			array(),
+			ANNOTO_VERSION,
+			true
+		);
+		wp_enqueue_script( 'annoto-bootstrap.js' );
 
-        if ( $currentUser instanceof WP_User ) {
-            static::$currentUserIdentity = $currentUser;
-        }
-    }
+		wp_register_script(
+			'annoto.js',
+			plugin_dir_url( __FILE__ ) . 'src/js/annoto.js',
+			array( 'jquery' ),
+			ANNOTO_VERSION,
+			true
+		);
+		wp_enqueue_script( 'annoto.js' );
 
-    /**
-     * Handle the AJAX and incapsulate business-logic according to retrieving correct config values
-     */
-    public static function getConfigData()
-    {
-        $post = $_POST;
+		wp_register_script(
+			'initkaltura.js',
+			plugin_dir_url( __FILE__ ) . 'src/js/initkaltura.js',
+			array( 'jquery' ),
+			ANNOTO_VERSION,
+			true
+		);
+		wp_enqueue_script( 'initkaltura.js' );
+	}
 
-        if (
-            array_key_exists('action', $post)
-            && $post['action'] === 'get-settings'
-        ) {
-            $pluginSettings = get_option('annoto_settings');
+	/**
+	 * Setter to store current user to class property
+	 */
+	public static function set_current_user() {
+		$currentUser = wp_get_current_user();
 
-            if (!$pluginSettings) {
-                echo json_encode(['status' => 'failed']);
-                exit();
+		if ( $currentUser instanceof WP_User ) {
+			static::$current_user_identity = $currentUser;
+		}
+	}
+
+	/**
+	 * Handle the AJAX and incapsulate business-logic according to retrieving correct config values
+	 */
+	public static function getConfigData() {
+		$post = $_POST;
+
+		if (
+			array_key_exists( 'action', $post )
+			&& 'get-settings' === $post['action']
+		) {
+			$plugin_settings = get_option( 'annoto_settings' );
+
+			if ( ! $plugin_settings ) {
+				echo wp_json_encode( array( 'status' => 'failed' ) );
+				exit();
+			}
+
+			if ( ! $plugin_settings['sso-support'] ) {
+				$plugin_settings['sso-secret'] = '';
+			}
+
+			$plugin_settings['token'] = '';
+
+			if (
+				! $plugin_settings['demo-mode']
+				&& $plugin_settings['sso-support']
+				&& is_user_logged_in()
+			) {
+				$plugin_settings['token'] = static::generateToken( $plugin_settings );
+			}
+
+			unset( $plugin_settings['sso-secret'] );
+
+			if ( 'auto' === $plugin_settings['locale'] || '' === $plugin_settings['locale'] ) {
+				$plugin_settings['locale'] = substr( get_locale(), 0, 2 );
+			}
+			if ( 'he' === $plugin_settings['locale'] ) {
+				$plugin_settings['rtl-support'] = 1;
+			}
+
+			$widgetposition      = 'right';
+			$widgetverticalalign = 'center';
+			if ( stripos( $plugin_settings['widget-position'], 'left' ) !== false ) {
+				$widgetposition = 'left';
+			}
+			if ( stripos( $plugin_settings['widget-position'], 'top' ) !== false ) {
+				$widgetverticalalign = 'top';
+			}
+			if ( stripos( $plugin_settings['widget-position'], 'bottom' ) !== false ) {
+				$widgetverticalalign = 'bottom';
+			}
+			$plugin_settings['position']      = $widgetposition;
+			$plugin_settings['alignVertical'] = $widgetverticalalign;
+			$plugin_settings['loginUrl']      = wp_login_url();
+
+            if ($plugin_settings['deploymentDomain'] == 'euregion' || $plugin_settings['deploymentDomain'] == '') {
+                $plugin_settings['deploymentDomain'] = 'annoto.net';
+            } else if ($plugin_settings['deploymentDomain'] == 'usregion') {
+                $plugin_settings['deploymentDomain'] = 'us.annoto.net';
             }
 
-            if ( ! $pluginSettings['sso-support'] ) {
-                $pluginSettings['sso-secret'] = '';
-            }
+			echo wp_json_encode(
+				array(
+					'status' => 'success',
+					'data'   => $plugin_settings,
+				)
+			);
+			exit();
+		}
+	}
 
-            $pluginSettings['token'] = '';
+	/**
+	 * Make IFrames compatible with Annoto API
+	 *
+	 * @param string $html
+	 * @param array  $attr
+	 *
+	 * @return string
+	 */
+	public static function prepare_video_iframe_attributes( $html, $attr ) {
+		if ( empty( $attr['id'] ) ) {
+			$unique_id = uniqid( 'annoto_', true );
+			$html      = str_replace( '<iframe', sprintf( '<iframe id="%s"', $unique_id ), $html );
+		}
 
-            if (
-                ! $pluginSettings['demo-mode']
-                && $pluginSettings['sso-support']
-                && is_user_logged_in()
-            ) {
-                $pluginSettings['token'] = static::generateToken($pluginSettings);
-            }
+		if ( strpos( $html, 'youtube' ) && ! strpos( $html, 'enablejsapi=1' ) ) {
+			$html = str_replace( 'feature=oembed', 'feature=oembed&enablejsapi=1', $html );
+		}
 
-            unset($pluginSettings['sso-secret']);
+		return $html;
+	}
 
-            echo json_encode([
-                'status' => 'success',
-                'data' => $pluginSettings
-            ]);
-            exit();
-        }
-    }
+	/**
+	 * Render view by name
+	 *
+	 * @param string $name
+	 */
+	public static function view( $name ) {
 
-    /**
-     * Make IFrames compatible with Annoto API
-     *
-     * @param string $html
-     * @param string $url
-     * @param array $attr
-     *
-     * @return string
-     */
-    public static function prepareVideoIFrameAttributes( $html, $url, $attr )
-    {
-        do_action( 'qm/debug', 'prepareVideoIFrameAttributes' );
-        if ( empty( $attr['id'] ) ) {
-            do_action( 'qm/debug', 'prepareVideoIFrameAttributes: no id, generating' );
-            $uniqueId = uniqid('annoto_', true);
-            $html = str_replace( '<iframe', sprintf( '<iframe id="%s"', $uniqueId ), $html );
-        }
+		$file = ANNOTO_PLUGIN_DIR . 'views/' . $name . '.php';
 
-        if ( strpos( $url, 'youtube' ) && !strpos( $html, 'enablejsapi=1' ) ) {
-            do_action( 'qm/debug', 'prepareVideoIFrameAttributes: no enablejsapi, adding' );
-            $html = str_replace( 'feature=oembed', 'feature=oembed&enablejsapi=1', $html );
-        }
+		include $file;
+	}
 
-        return $html;
-    }
+	/**
+	 * Plugin activation handler
+	 */
+	public static function plugin_activation() {
+		if ( static::checkCurrentVersionCorresponding() ) {
+			static::showUpdateMessageInfo();
 
-    /**
-     * Render view by name
-     *
-     * @param string $name
-     */
-    public static function view( $name ) {
+			return;
+		}
 
-        $file = ANNOTO_PLUGIN_DIR . 'views/'. $name . '.php';
+		if ( ! static::setDefaultSettingsValuesForPlugin() ) {
+			static::showSettingFailsInfo();
 
-        include( $file );
-    }
+			return;
+		}
+	}
 
-    /**
-     * Plugin activation handler
-     */
-    public static function plugin_activation() {
-        if ( static::checkCurrentVersionCorresponding() ) {
-            static::showUpdateMessageInfo();
+	/**
+	 * Plugin deactivation handler
+	 */
+	public static function plugin_deactivation() {
+		return delete_option( ANNOTO_SETTING_KEY_NAME );
+	}
 
-            return;
-        }
+	/**
+	 * Set default setting values for plugin
+	 *
+	 * @return bool
+	 */
+	private static function setDefaultSettingsValuesForPlugin() {
+		return add_option( ANNOTO_SETTING_KEY_NAME, static::$defaultSettingValues, 'no' );
+	}
 
-        if ( !static::setDefaultSettingsValuesForPlugin() ) {
-            static::showSettingFailsInfo();
+	/**
+	 * Check is current version of Annoto plugin corresponding to WP version
+	 *
+	 * @return mixed
+	 */
+	private static function checkCurrentVersionCorresponding() {
+		return version_compare( $GLOBALS['wp_version'], ANNOTO_MINIMUM_WP_VERSION, '<' );
+	}
 
-            return;
-        }
-    }
+	/**
+	 * Show setting fails info
+	 */
+	private static function showSettingFailsInfo() {
+		$message = '<strong>' . __( 'Can\'t set default values for Annoto plugin.', 'annoto' ) . '</strong>';
 
-    /**
-     * Plugin deactivation handler
-     */
-    public static function plugin_deactivation( ) {
-        return delete_option( ANNOTO_SETTING_KEY_NAME );
-    }
+		static::showMessageTemplate( $message );
+	}
 
-    /**
-     * Set default setting values for plugin
-     *
-     * @return bool
-     */
-    private static function setDefaultSettingsValuesForPlugin()
-    {
-        return add_option( ANNOTO_SETTING_KEY_NAME, static::$defaultSettingValues, 'no' );
-    }
+	/**
+	 * Show update message info
+	 */
+	private static function showUpdateMessageInfo() {
+		$message = '<strong>'
+		. sprintf(
+			esc_html__( 'Annoto %1$s requires WordPress %2$s or higher.', 'annoto' ),
+			ANNOTO_VERSION,
+			ANNOTO_MINIMUM_WP_VERSION
+		)
+		. '</strong> '
+		. sprintf(
+			__( 'Please <a href="%1$s">upgrade WordPress</a> to a current version.', 'annoto' ),
+			'https://codex.wordpress.org/Upgrading_WordPress'
+		);
 
-    /**
-     * Check is current version of Annoto plugin corresponding to WP version
-     *
-     * @return mixed
-     */
-    private static function checkCurrentVersionCorresponding()
-    {
-        return version_compare( $GLOBALS['wp_version'], ANNOTO_MINIMUM_WP_VERSION, '<' );
-    }
+		static::showMessageTemplate( $message );
+	}
 
-    /**
-     * Show setting fails info
-     */
-    private static function showSettingFailsInfo()
-    {
-        $message = '<strong>' . __('Can\'t set default values for Annoto plugin.', 'annoto') . '</strong>';
+	/**
+	 * Generate JWT Token
+	 *
+	 * @param array $plugin_settings
+	 *
+	 * @return string
+	 */
+	private static function generateToken( array $plugin_settings ) {
+		$issued_at = time();
+		$expire    = $issued_at + 60 * 60;
 
-        static::showMessageTemplate( $message );
-    }
+		$payload = array(
+			'iss'      => $plugin_settings['api-key'],
+			'exp'      => $expire,
+			'jti'      => static::$current_user_identity->ID,
+			'name'     => static::$current_user_identity->display_name,
+			'email'    => static::$current_user_identity->user_email,
+			'photoUrl' => get_avatar_url( static::$current_user_identity->ID ),
+			'scope'    => ( static::$current_user_identity->caps['administrator'] ? 'super-mod' : 'user' ),
+		);
 
-    /**
-     * Show update message info
-     */
-    private static function showUpdateMessageInfo()
-    {
-        $message = '<strong>'
-            . sprintf(
-                esc_html__( 'Annoto %s requires WordPress %s or higher.' , 'annoto'),
-                ANNOTO_VERSION,
-                ANNOTO_MINIMUM_WP_VERSION
-            )
-            . '</strong> '
-            . sprintf(
-                __('Please <a href="%1$s">upgrade WordPress</a> to a current version.', 'annoto'),
-                'https://codex.wordpress.org/Upgrading_WordPress'
-            );
+		$ret = JWT::encode( $payload, $plugin_settings['sso-secret'] );
 
-        static::showMessageTemplate( $message );
-    }
+		return $ret;
+	}
 
-    /**
-     * Generate JWT Token
-     *
-     * @param array $pluginSettings
-     *
-     * @return string
-     */
-    private static function generateToken(array $pluginSettings)
-    {
-        $issuedAt = time();
-        $expire = $issuedAt + 60*60;
+	/**
+	 * Show message template
+	 *
+	 * @param string $message
+	 */
+	private static function showMessageTemplate( $message ) {
+		?>
+		<!doctype html>
+		<html>
 
-        $payload = [
-            'iss' => $pluginSettings['api-key'],
-            'exp' => $expire,
-            'jti' => static::$currentUserIdentity->ID,
-            'name' => static::$currentUserIdentity->display_name,
-            'email' => static::$currentUserIdentity->user_email,
-            'photoUrl' => get_avatar_url(static::$currentUserIdentity->ID),
-        ];
+		<head>
+			<meta charset="<?php bloginfo( 'charset' ); ?>">
+			<style>
+				* {
+					text-align: center;
+					margin: 0;
+					padding: 0;
+					font-family: "Lucida Grande", Verdana, Arial, "Bitstream Vera Sans", sans-serif;
+				}
 
-        return JWT::encode($payload, $pluginSettings['sso-secret']);
-    }
+				p {
+					margin-top: 1em;
+					font-size: 18px;
+				}
+			</style>
 
-    /**
-     * Show message template
-     *
-     * @param string $message
-     */
-    private static function showMessageTemplate( $message ) {
-        ?>
-        <!doctype html>
-        <html>
-        <head>
-            <meta charset="<?php bloginfo( 'charset' ); ?>">
-            <style>
-                * {
-                    text-align: center;
-                    margin: 0;
-                    padding: 0;
-                    font-family: "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
-                }
-                p {
-                    margin-top: 1em;
-                    font-size: 18px;
-                }
-            </style>
-        <body>
-        <p><?php echo $message; ?></p>
-        </body>
-        </html>
-        <?php
-        exit();
-    }
+		<body>
+			<p><?php echo $message; ?></p>
+		</body>
+
+		</html>
+		<?php
+		exit();
+	}
 }
