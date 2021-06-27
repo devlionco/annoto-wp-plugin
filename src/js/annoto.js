@@ -90,10 +90,9 @@ jQuery(
 			config.position  = params["position"];
 			config.demoMode  = Boolean( params["demo-mode"] );
 			config.locale    = params["locale"];
-			config.deploymentDomain    = params["deploymentDomain"];
-
-			features.tabs  = Boolean( params["widget-features-tabs"] );
-			align.vertical = params["alignVertical"];
+			config.backend   = {domain: params.settings["deploymentDomain"]};
+			features.tabs    = Boolean( params["widget-features-tabs"] );
+			align.vertical   = params["alignVertical"];
 
 			align.horizontal = "inner";
 
