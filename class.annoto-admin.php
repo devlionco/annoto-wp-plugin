@@ -19,6 +19,7 @@ class AnnotoAdmin {
 		'widget-features-tabs',
 		'widget-features-private',
 		'zindex',
+		'openOnLoad',
 	);
 
 	/**

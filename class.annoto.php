@@ -34,6 +34,7 @@ class Annoto {
 		'zindex'                          => '100',
         'widget-features-private'         => 1,
         'deploymentDomain'                => 'euregion',
+        'openOnLoad'                	  => 1,
 	);
 
 	/**
