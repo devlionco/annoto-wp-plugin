@@ -90,7 +90,7 @@ jQuery(
 			config.position  = params["position"];
 			config.demoMode  = Boolean( params["demo-mode"] );
 			config.locale    = params["locale"];
-			config.backend   = {domain: params.settings["deploymentDomain"]};
+			config.backend   = {domain: params["deploymentDomain"]};
 			features.tabs    = Boolean( params["widget-features-tabs"] );
 			align.vertical   = params["alignVertical"];
 
@@ -100,10 +100,12 @@ jQuery(
 			 * Attach the ssoAuthRequestHandle hook.
 			 * https://github.com/Annoto/widget-api/blob/master/lib/config.d.ts#L159
 			 */
-			ux.ssoAuthRequestHandle = function () {
-				// In case user is not logged in and tries to submit content
-				// trigger user login
-				window.location.replace( params["loginUrl"] );
+
+			config.ux = {
+				ssoAuthRequestHandle: function () {
+					window.location.replace(params["loginUrl"]);
+				},
+				openOnLoad: Boolean(params["openOnLoad"]),
 			};
 
 			playerConfig.mediaDetails = this.enrichMediaDetails.bind( this );
@@ -325,6 +327,13 @@ jQuery(
 
 				config.features = {
 					tabs: Boolean( configData.settings["widget-features-tabs"] ),
+				};
+
+				config.ux = {
+					ssoAuthRequestHandle: function () {
+						window.location.replace(configData.settings["loginUrl"]);
+					},
+					openOnLoad: Boolean(configData.settings["openOnLoad"]),
 				};
 
 				if (configData.settings["player-type"] === "vimeo") {
