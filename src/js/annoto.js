@@ -122,7 +122,7 @@ jQuery(
 				ann = window.moodleAnnoto,
 				annplayers = Object.keys(ann.kApp.kdpMap).filter((name) => /^kaltura_player_*/.test(name)),
 				annplayer = ann.kApp.kdpMap[annplayers[0]],
-				article = $(annplayer.player).closest('article.post'),
+				article = $(annplayer.player).closest('article'),
 				postid = article[0].id.split('-')[1],
 				posttitle = $(article).find('header.entry-header .entry-title').text();
 
@@ -186,27 +186,27 @@ jQuery(
 						data["mediaTitle"] = '';
 						playerId = videojs.id;
 						data["player-type"] = "videojs";
-						article = videojs.closest('article.post');
+						article = videojs.closest('article');
 					} else if (jwplayer) {
 						data["mediaTitle"] = '';
 						playerId = jwplayer.id;
 						data["player-type"] = "jw";
-						article = jwplayer.closest('article.post');
+						article = jwplayer.closest('article');
 					} else if (h5p) {
 						data["mediaTitle"] = H5PIntegration.contents['cid-1'].title;
 						playerId = h5p.id;
 						data["player-type"] = "h5p";
-						article = h5p.closest('article.post');
+						article = h5p.closest('article');
 					} else if (youtube) {
 						data["mediaTitle"] = youtube.title;
 						playerId = youtube.id;
 						data["player-type"] = "youtube";
-						article = youtube.closest('article.post');
+						article = youtube.closest('article');
 					} else if (vimeo) {
 						data["mediaTitle"] = vimeo.title;
 						playerId = vimeo.id;
 						data["player-type"] = "vimeo";
-						article = vimeo.closest('article.post');
+						article = vimeo.closest('article');
 					}
 
 					data["mediaGroupId"] = article.id.split('-')[1];
