@@ -276,9 +276,12 @@ class Annoto {
 	 *
 	 * @return bool
 	 */
-	private static function setDefaultSettingsValuesForPlugin() {
-		return add_option( ANNOTO_SETTING_KEY_NAME, static::$defaultSettingValues, 'no' );
-	}
+    private static function setDefaultSettingsValuesForPlugin() {
+        if (!get_option( ANNOTO_SETTING_KEY_NAME )) {
+            return add_option( ANNOTO_SETTING_KEY_NAME, static::$defaultSettingValues, 'no' );
+        }
+        return true;
+    }
 
 	/**
 	 * Check is current version of Annoto plugin corresponding to WP version
