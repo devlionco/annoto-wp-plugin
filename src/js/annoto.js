@@ -228,10 +228,8 @@ jQuery(
 					return;
 				}
 
-				if (configData.playerId.length === 0) {
-					console &&
-					console.error( "Annoto Plugin: Can't determine the player ID." );
-					return;
+				if (!configData.playerId || configData.playerId === '') {
+					configData.playerId = 'annoto_' + Math.random().toString(36).substr(2, 6);
 				}
 
 				if (
