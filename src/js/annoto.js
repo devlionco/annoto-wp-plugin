@@ -136,7 +136,7 @@ jQuery(
 				type: "playlist",
 				title: posttitle,
 				description: posttitle,
-				privateThread: params['widget-features-private'],
+				privateThread: Boolean(params['widget-features-private']),
 			};
 
 			return retVal;
@@ -261,6 +261,7 @@ jQuery(
 				var grouptitle = typeof course_title !== 'undefined' ? course_title : configData.settings["mediaGroupTitle"];
 
 				var config = {
+
 					clientId: configData.settings["api-key"],
 					backend: {
 						domain: configData.settings["deploymentDomain"]
@@ -279,7 +280,7 @@ jQuery(
 										type: 'playlist',
 										title: grouptitle,
 										description: configData.settings["mediaGroupTitle"],
-										privateThread: configData.settings["widget-features-private"],
+										privateThread: Boolean(configData.settings["widget-features-private"]),
 									}
 								};
 							},
