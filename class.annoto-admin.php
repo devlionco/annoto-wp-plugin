@@ -9,17 +9,8 @@ class AnnotoAdmin {
 	private static $initiated = false;
 
 	public static $intConfigValueNames = array(
-		'sso-support',
-		'demo-mode',
-		// 'locale',
+        'locale',
 		'widget-max-width',
-		// 'annoto-advanced-settings-switch',
-		// 'annoto-timeline-overlay-switch',
-		'annoto-vimeo-premium-player',
-		'widget-features-tabs',
-		'widget-features-private',
-		'zindex',
-		'openOnLoad',
 	);
 
 	/**

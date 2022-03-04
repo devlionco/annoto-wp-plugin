@@ -3,36 +3,9 @@ jQuery( document ).ready(
 
 		var nameToOutputTextMapper = {
 			mappingData: {
-				'widget-position': {
-					right: 'Right',
-					left: 'Left',
-					topright: 'Top Right',
-					topleft: 'Top Left',
-					bottomright: 'Bottom right',
-					bottomleft: 'Bottom Left',
-				},
 				'player-type': {
 					youtube: 'YouTube',
 					vimeo: 'Vimeo'
-				},
-				'locale': {
-					auto: 'Auto',
-					en: 'En',
-					he: 'He'
-				},
-				'widget-align-vertical': {
-					center: 'Center',
-					bottom: 'Bottom',
-					top: 'Top'
-				},
-				'widget-align-horizontal': {
-					screen_edge: 'Edge of Screen',
-					element_edge: 'Edge of Player'
-				},
-				'overlayMode': {
-					auto: 'Auto',
-					inner: 'On top of Player',
-					element_edge: 'Next to Player',
 				},
 				'deploymentDomain': {
 					euregion: 'EU region',
@@ -41,31 +14,6 @@ jQuery( document ).ready(
 			},
 			getOutputText: function (fieldName, valueName) {
 				return this.mappingData[fieldName][valueName];
-			}
-		};
-
-		var toggleDisabledInputs = {
-			ssoSupport: function () {
-				var ssoSecretInput = $( '#sso-secret' );
-				this.isSsoSecretEnabled() ? ssoSecretInput.prop( 'disabled', false ) : ssoSecretInput.prop( 'disabled', true );
-			},
-			ssoSecret: function () {
-				var apiKeyInput = $( '#api-key' ),
-				ssoSecretInput  = $( '#sso-secret' );
-
-				$( '#demo-mode' )[0].checked ? apiKeyInput.prop( 'disabled', true ) : apiKeyInput.prop( 'disabled', false );
-				this.isSsoSecretEnabled() ? ssoSecretInput.prop( 'disabled', false ) : ssoSecretInput.prop( 'disabled', true );
-			},
-			isSsoSecretEnabled: function () {
-				return false === $( '#demo-mode' )[0].checked && $( '#sso-support' )[0].checked;
-			},
-
-			toggleLocaleSettings: function () {
-				var locale = $( '#locale-value' ).val();
-			},
-			all: function () {
-				this.ssoSupport();
-				this.ssoSecret();
 			}
 		};
 
@@ -163,18 +111,6 @@ jQuery( document ).ready(
 					3000
 				);
 			},
-			disableSsoIfDemoOn: function (demoModeSelector) {
-				if ($( demoModeSelector )[0].checked) {
-					$( '#sso-support' )[0].checked = false;
-				}
-			},
-			disableDemoIfSsoOn: function (ssoSupportSelector) {
-				if ($( ssoSupportSelector )[0].checked) {
-					$( '#demo-mode' )[0].checked = false;
-					$( '#api-key' ).prop( 'disabled', false );
-					$( '#sso-secret' ).prop( 'disabled', false );
-				}
-			},
 			sendToServer: function () {
 				if (this.isDataChanged() && this.isValid()) {
 
@@ -234,7 +170,6 @@ jQuery( document ).ready(
 				}
 			);
 
-			toggleDisabledInputs.all();
 		})();
 
 		$( '#settingForm' ).submit(
@@ -249,20 +184,6 @@ jQuery( document ).ready(
 				event.preventDefault();
 
 				$( '#settingForm' ).submit();
-			}
-		);
-
-		$( '#demo-mode' ).change(
-			function () {
-				toggleDisabledInputs.ssoSecret();
-				settingForm.disableSsoIfDemoOn( this );
-			}
-		);
-
-		$( '#sso-support' ).change(
-			function () {
-				toggleDisabledInputs.ssoSupport();
-				settingForm.disableDemoIfSsoOn( this );
 			}
 		);
 

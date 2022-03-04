@@ -167,13 +167,8 @@ input:checked + .annoto-slider:before {
 	border-color: #eeeeee;
 }
 
+.annoto-bootstrap .panel.api-key,
 .panel-white {
-	box-shadow: none;
-}
-
-.annoto-bootstrap .panel.panel-right-grey {
-	border-right: 1px solid lightgrey;
-	border-radius: 0;
 	box-shadow: none;
 }
 
@@ -205,6 +200,15 @@ input:checked + .annoto-slider:before {
 	margin-top: 2em;
 }
 
+.annoto-bootstrap .heading {
+	font-weight: bold;
+	text-align: left;
+}
+
+.annoto-bootstrap .border-left {
+	border-left: 1px solid #ccc;
+}
+
 @media (max-width: 782px) {
 	.annoto-notification {
 		top: 46px;
@@ -220,11 +224,5 @@ input:checked + .annoto-slider:before {
 @media (max-width: 1200px) {
 	.form-horizontal .panel-settings .control-label.setting-label {
 		text-align: center;
-	}
-}
-
-@media (max-width: 768px) {
-	.annoto-bootstrap .panel.panel-right-grey {
-		border-right: 0;
 	}
 }

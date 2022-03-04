@@ -15,26 +15,14 @@ class Annoto {
 
 	/** @var array $defaultSettingValues */
 	private static $defaultSettingValues = array(
-		'sso-support'                     => 0,
-		'demo-mode'                       => 1,
-		'annoto-advanced-settings-switch' => 0,
-		'annoto-timeline-overlay-switch'  => 0,
-		'widget-position'                 => 'right',
-		'locale'                          => 'auto',
-		'rtl-support'                     => 0,
+		'scripturl'                     => 'https://cdn.annoto.net/widget/latest/bootstrap.js',
+		'locale'                          => 1,
 		'player-type'                     => 'youtube',
-		'annoto-vimeo-premium-player'     => 0,
 		'sso-secret'                      => '',
 		'api-key'                         => '',
 		'widget-max-width'                => '300',
-		'widget-align-vertical'           => 'center',
-		'widget-align-horizontal'         => 'center',
 		'annoto-player-params'            => '{}',
-		'overlayMode'                     => 'element_edge',
-		'zindex'                          => '100',
-        'widget-features-private'         => 1,
         'deploymentDomain'                => 'euregion',
-        'openOnLoad'                	  => 1,
 	);
 
 	/**
@@ -104,9 +92,11 @@ class Annoto {
 	 * Load all sources
 	 */
 	public static function load_resources() {
+        $settings = get_option( 'annoto_settings' );
+
 		wp_register_script(
 			'annoto-bootstrap.js',
-			'https://app.annoto.net/annoto-bootstrap.js',
+            $settings['scripturl'],
 			array(),
 			ANNOTO_VERSION,
 			true
@@ -160,15 +150,11 @@ class Annoto {
 				exit();
 			}
 
-			if ( ! $plugin_settings['sso-support'] ) {
-				$plugin_settings['sso-secret'] = '';
-			}
 
 			$plugin_settings['token'] = '';
 
 			if (
-				! $plugin_settings['demo-mode']
-				&& $plugin_settings['sso-support']
+				$plugin_settings['sso-secret']
 				&& is_user_logged_in()
 			) {
 				$plugin_settings['token'] = static::generateToken( $plugin_settings );
@@ -176,30 +162,11 @@ class Annoto {
 
 			unset( $plugin_settings['sso-secret'] );
 
-			if ( 'auto' === $plugin_settings['locale'] || '' === $plugin_settings['locale'] ) {
-				$plugin_settings['locale'] = substr( get_locale(), 0, 2 );
-			}
-			if ( 'he' === $plugin_settings['locale'] ) {
-				$plugin_settings['rtl-support'] = 1;
-			}
-
-			$widgetposition      = 'right';
-			$widgetverticalalign = 'center';
-			if ( stripos( $plugin_settings['widget-position'], 'left' ) !== false ) {
-				$widgetposition = 'left';
-			}
-			if ( stripos( $plugin_settings['widget-position'], 'top' ) !== false ) {
-				$widgetverticalalign = 'top';
-			}
-			if ( stripos( $plugin_settings['widget-position'], 'bottom' ) !== false ) {
-				$widgetverticalalign = 'bottom';
-			}
-			$plugin_settings['position']      = $widgetposition;
-			$plugin_settings['alignVertical'] = $widgetverticalalign;
+			$plugin_settings['locale'] = $plugin_settings['locale'] ? substr( get_locale(), 0, 2 ) : null;
 			$plugin_settings['loginUrl']      = wp_login_url();
 
             if ($plugin_settings['deploymentDomain'] == 'euregion' || $plugin_settings['deploymentDomain'] == '') {
-                $plugin_settings['deploymentDomain'] = 'annoto.net';
+                $plugin_settings['deploymentDomain'] = 'eu.annoto.net';
             } else if ($plugin_settings['deploymentDomain'] == 'usregion') {
                 $plugin_settings['deploymentDomain'] = 'us.annoto.net';
             }
@@ -224,7 +191,7 @@ class Annoto {
 	 */
 	public static function prepare_video_iframe_attributes( $html, $attr ) {
 		if ( empty( $attr['id'] ) ) {
-			$unique_id = uniqid( 'annoto_', true );
+			$unique_id = uniqid( 'annoto_');
 			$html      = str_replace( '<iframe', sprintf( '<iframe id="%s"', $unique_id ), $html );
 		}
 
