@@ -96,10 +96,6 @@ If you are upgrading your current version of the plugin :
 
     + Timeline overlay
           
-    + Demo Mode:
-        * Enabled
-        * Disabled
-
     + SSO Support:
         * Enabled
         * Disabled

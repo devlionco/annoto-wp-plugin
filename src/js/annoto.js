@@ -1,12 +1,12 @@
 jQuery(
 	function ($) {
-		var getSettingsDeferred = $.Deferred();
+		const getSettingsDeferred = $.Deferred();
 
-		var configparams = "";
+		let configparams = "";
 
 		// Kaltura
 		setupKaltura = function () {
-			var maKApp                             = window.moodleAnnoto.kApp;
+			const maKApp                             = window.moodleAnnoto.kApp;
 			window.moodleAnnoto.setupKalturaKdpMap = this.setupKalturaKdpMap.bind( this );
 
 			if (maKApp) {
@@ -21,7 +21,7 @@ jQuery(
 		authKalturaPlayer = function (api) {
 			// Api is the API to be used after Annoot is setup
 			// It can be used for SSO auth.
-			var jwt = configparams["token"];
+			const jwt = configparams["token"];
 
 			console.log( "AnnotoMoodle: annoto ready" );
 			if (api && jwt && jwt !== "") {
@@ -41,7 +41,7 @@ jQuery(
 				return;
 			}
 			console.log( "AnnotoMoodle: setup Kaltura players" );
-			for (var kdpMapKey in kdpMap) {
+			for (let kdpMapKey in kdpMap) {
 				if (kdpMap.hasOwnProperty( kdpMapKey )) {
 					this.setupKalturaKdp( kdpMap[kdpMapKey] );
 				}
@@ -72,72 +72,48 @@ jQuery(
 			// * clientId, features, etc. DO NOT CHANGE THE PLAYER TYPE OR PLAYER ELEMENT CONFIG.
 			// */
 
-			var params = configparams;
+			const params = configparams;
 
-			var widget       = config.widgets[0];
-			var playerConfig = widget.player;
-
-			var ux       = config.ux || {};
-			var align    = config.align || {};
-			var features = config.features || {};
-
-			config.ux       = ux;
-			config.align    = align;
-			config.features = features;
-
-			config.clientId  = params["api-key"];
-			config.userToken = params["token"];
-			config.position  = params["position"];
-			config.demoMode  = Boolean( params["demo-mode"] );
-			config.locale    = params["locale"];
-			config.backend   = {domain: params["deploymentDomain"]};
-			features.tabs    = Boolean( params["widget-features-tabs"] );
-			align.vertical   = params["alignVertical"];
-
-			align.horizontal = "inner";
-
-			/**
-			 * Attach the ssoAuthRequestHandle hook.
-			 * https://github.com/Annoto/widget-api/blob/master/lib/config.d.ts#L159
-			 */
-
-			config.ux = {
-				ssoAuthRequestHandle: function () {
-					window.location.replace(params["loginUrl"]);
-				},
-				openOnLoad: Boolean(params["openOnLoad"]),
-			};
-
-			playerConfig.mediaDetails = this.enrichMediaDetails.bind( this );
-		};
-
-		enrichMediaDetails = function (details) {
-			// The details contains MediaDetails the plugin has managed to obtain
-			// This hook gives a change to enrich the details, for example
-			// providing group information for private discussions per course/playlist
-			// https://github.com/Annoto/widget-api/blob/master/lib/media-details.d.ts#L6.
-			// Annoto Kaltura plugin, already has some details about the media like title.
-			//
-			var params = configparams,
-				ann = window.moodleAnnoto,
+			const ann = window.moodleAnnoto,
 				annplayers = Object.keys(ann.kApp.kdpMap).filter((name) => /^kaltura_player_*/.test(name)),
 				annplayer = ann.kApp.kdpMap[annplayers[0]],
 				article = $(annplayer.player).closest('article'),
 				postid = article[0].id.split('-')[1],
 				posttitle = $(article).find('header.entry-header .entry-title').text();
 
-			var retVal = details || {};
-			retVal.title = retVal.title || params.mediaTitle;
-			retVal.description = retVal.description
-				? retVal.description
-				: params.mediaDescription;
-			retVal.group = {
+			config.clientId = params["api-key"];
+			config.hooks = {
+				getPageUrl: function() {
+					return window.location.href;
+				},
+				ssoAuthRequestHandle: function() {
+					window.location.replace(params.loginUrl);
+				},
+				mediaDetails: this.enrichMediaDetails.bind(this),
+			};
+			config.group = {
 				id: postid,
-				type: "playlist",
 				title: posttitle,
 				description: posttitle,
-				privateThread: Boolean(params['widget-features-private']),
 			};
+
+			if (params.locale) {
+				config.locale = params.locale;
+			}
+		};
+
+		enrichMediaDetails = function (mediaParams) {
+			// The details contains MediaDetails the plugin has managed to obtain
+			// This hook gives a change to enrich the details, for example
+			// providing group information for private discussions per course/playlist
+			// https://github.com/Annoto/widget-api/blob/master/lib/media-details.d.ts#L6.
+			// Annoto Kaltura plugin, already has some details about the media like title.
+			//
+			const params = configparams;
+			const retVal = (mediaParams && mediaParams.details) || {};
+
+			retVal.title = retVal.title || params.mediaTitle;
+			retVal.description = retVal.description || params.mediaDescription;
 
 			return retVal;
 		};
@@ -150,7 +126,7 @@ jQuery(
 			}
 		).done(
 			function (serverResponse) {
-				var response = JSON.parse( serverResponse );
+				const response = JSON.parse( serverResponse );
 
 				if (response.status === "success") {
 					configparams = response.data;
@@ -164,7 +140,7 @@ jQuery(
 			}
 		);
 
-		var kaltura = setupKaltura();
+		const kaltura = setupKaltura();
 
 		if (kaltura) {
 			return;
@@ -173,13 +149,14 @@ jQuery(
 		$.when(getSettingsDeferred)
 			.then(
 				function (data) {
-					var parent = document.body,
+					let parent = document.body,
 						h5p = $(parent).find("iframe.h5p-iframe").first().get(0),
 						youtube = $(parent).find('iframe[src*="youtube.com"]').first().get(0),
 						vimeo = $(parent).find('iframe[src*="vimeo.com"]').first().get(0),
 						videojs = $(parent).find(".video-js").first().get(0),
 						jwplayer = $(parent).find(".jwplayer").first().get(0),
-						article = null;
+						article = null,
+						playerId = null;
 
 
 					if (videojs) {
@@ -223,116 +200,55 @@ jQuery(
 		)
 		.then(
 			function (configData) {
-				if ( ! configData) {
+				if ( !configData ) {
 					console && console.error( "Annoto Plugin: settings missing." );
 					return;
 				}
 
-				if (!configData.playerId || configData.playerId === '') {
-					configData.playerId = 'annoto_' + Math.random().toString(36).substr(2, 6);
-				}
-
-				if (
-				! configData.settings["demo-mode"] &&
-				configData.settings["api-key"].length === 0
-				) {
-					console &&
-					console.error(
-						"Annoto Plugin: Plugin isn't in the Demo Mode, please, set the SSO Secret."
-					);
-					return;
-				}
-
-				if (configData.settings["demo-mode"]) {
-					console && console.warn( "Annoto Plugin: Plugin boot in the Demo Mode." );
-				}
-
 				$( "#" + configData.playerId ).after( '<div id="annoto-app"></div>' );
 
-				var locale = configData.settings["locale"];
-				var rtl    = false;
-				if (locale === "he") {
-					rtl = true;
-				}
-
 				// LearnDash check.
-				var videotitle = typeof lesson_title !== 'undefined' ? lesson_title : configData.settings["mediaTitle"];
-				var id = typeof course_id !== 'undefined' ? course_id : configData.settings["mediaGroupId"];
-				var grouptitle = typeof course_title !== 'undefined' ? course_title : configData.settings["mediaGroupTitle"];
+				const params = configData.settings;
+				const videotitle = typeof lesson_title !== 'undefined' ? lesson_title : params.mediaTitle;
+				const id = typeof course_id !== 'undefined' ? course_id : params.mediaGroupId;
+				const grouptitle = typeof course_title !== 'undefined' ? course_title : params.mediaGroupTitle;
+				const nonOverlayTimelinePlayers = ["youtube", "vimeo"];
 
-				var config = {
+				const config = {
 
-					clientId: configData.settings["api-key"],
+					clientId: params["api-key"],
 					backend: {
-						domain: configData.settings["deploymentDomain"]
+						domain: params.deploymentDomain,
 					},
-					position: configData.settings["position"],
+					hooks: {
+						mediaDetails: function() {
+							return {
+								details: {
+									title: videotitle,
+									description: params.mediaTitle,
+								}
+							};
+						},
+						ssoAuthRequestHandle: function() {
+							window.location.replace(params.loginUrl);
+						},
+					},
+					group: {
+						id: id,
+						title: grouptitle,
+						description: params.mediaGroupTitle,
+					},
 					widgets: [{
 						player: {
 							type: configData.settings["player-type"],
-							element: configData.playerId,
-							mediaDetails: function() {
-								return {
-									title: videotitle,
-									description: configData.settings["mediaTitle"],
-									group: {
-										id: id,
-										type: 'playlist',
-										title: grouptitle,
-										description: configData.settings["mediaGroupTitle"],
-										privateThread: Boolean(configData.settings["widget-features-private"]),
-									}
-								};
+							element: `#${configData.playerId}`,
+							timeline:  {
+								overlay: (nonOverlayTimelinePlayers.indexOf(configData.settings['player-type']) === -1)
 							},
-						},
-						timeline: {
-							embedded: false,
-							overlayVideo: Boolean(
-								configData.settings["annoto-timeline-overlay-switch"]
-							),
+
 						},
 					}],
-					simple: true,
-					rtl: rtl,
-					locale: locale,
-					demoMode: Boolean( configData.settings["demo-mode"] ),
-					zIndex: configData.settings["zindex"],
-				};
-
-				nonOverlayTimelinePlayers = ["youtube", "vimeo"];
-				innerAlignPlayers         = ["h5p"];
-				horizontalAlign           = "element_edge";
-
-				if (
-				! configData.settings["overlayMode"] ||
-				configData.settings["overlayMode"] === "auto"
-				) {
-					horizontalAlign =
-					innerAlignPlayers.indexOf( configData.settings["player-type"] ) !== -1
-						? "inner"
-						: "element_edge";
-				} else if (configData.settings["overlayMode"] === "inner") {
-					horizontalAlign = "inner";
-				}
-
-				config.align = {
-					vertical: configData.settings["alignVertical"],
-					horizontal: horizontalAlign,
-				};
-
-				if (configData.settings["annoto-advanced-settings-switch"]) {
-					config.width = { max: configData.settings["widget-max-width"] };
-				}
-
-				config.features = {
-					tabs: Boolean( configData.settings["widget-features-tabs"] ),
-				};
-
-				config.ux = {
-					ssoAuthRequestHandle: function () {
-						window.location.replace(configData.settings["loginUrl"]);
-					},
-					openOnLoad: Boolean(configData.settings["openOnLoad"]),
+					... (params.locale) && {locale: params.locale},
 				};
 
 				if (configData.settings["player-type"] === "vimeo") {
@@ -348,9 +264,9 @@ jQuery(
 				window.Annoto.on(
 					"ready",
 					function (api) {
-						if (configData.settings["token"].length > 0) {
+						if (params.token.length > 0) {
 							api.auth(
-								configData.settings["token"],
+								params.token,
 								function (annotoAuthError) {
 									if (annotoAuthError) {
 										console && console.error( annotoAuthError );
