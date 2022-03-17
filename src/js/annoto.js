@@ -156,41 +156,47 @@ jQuery(
 						videojs = $(parent).find(".video-js").first().get(0),
 						jwplayer = $(parent).find(".jwplayer").first().get(0),
 						article = null,
-						playerId = null;
+						player = null;
 
 
 					if (videojs) {
 						data["mediaTitle"] = '';
-						playerId = videojs.id;
+						player = videojs;
 						data["player-type"] = "videojs";
 						article = videojs.closest('article');
 					} else if (jwplayer) {
 						data["mediaTitle"] = '';
-						playerId = jwplayer.id;
+						player = jwplayer;
 						data["player-type"] = "jw";
 						article = jwplayer.closest('article');
 					} else if (h5p) {
 						data["mediaTitle"] = H5PIntegration.contents['cid-1'].title;
-						playerId = h5p.id;
+						player = h5p;
 						data["player-type"] = "h5p";
 						article = h5p.closest('article');
 					} else if (youtube) {
 						data["mediaTitle"] = youtube.title;
-						playerId = youtube.id;
+						player = youtube;
 						data["player-type"] = "youtube";
 						article = youtube.closest('article');
 					} else if (vimeo) {
 						data["mediaTitle"] = vimeo.title;
-						playerId = vimeo.id;
+						player = vimeo;
 						data["player-type"] = "vimeo";
 						article = vimeo.closest('article');
+					} else {
+						return {}; // No player found
 					}
 
 					data["mediaGroupId"] = article.id.split('-')[1];
 					data["mediaGroupTitle"] = $(article).find('header.entry-header .entry-title').text();
 
+					if (!player.id || player.id === '') {
+						player.id = 'annoto_' + Math.random().toString(36).substr(2, 6);
+					}
+
 					return {
-						playerId: playerId,
+						playerId: player.id,
 						settings: data,
 					};
 			},
@@ -200,6 +206,10 @@ jQuery(
 		)
 		.then(
 			function (configData) {
+				if (!Object.keys(configData).length) {
+					console.info('AnnotoMoodle: Player not recognized');
+					return;
+				}
 				if ( !configData ) {
 					console && console.error( "Annoto Plugin: settings missing." );
 					return;
@@ -276,7 +286,7 @@ jQuery(
 						}
 					}
 				);
-
+				         
 				window.Annoto.boot( config );
 			}
 		);
