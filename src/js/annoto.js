@@ -262,11 +262,10 @@ jQuery(
 				};
 
 				if (configData.settings["player-type"] === "vimeo") {
-					config.widgets[0].player.params =
-					configData.settings["annoto-player-params"];
+					config.widgets[0].player.params = {};
 				}
 
-				if ( ! window.Annoto) {
+				if ( ! window.Annoto ) {
 					console && console.error( "Annoto: not loaded" );
 					return;
 				}

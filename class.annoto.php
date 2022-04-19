@@ -13,17 +13,39 @@ class Annoto {
 	/** @var WP_User|null $current_user_identity */
 	private static $current_user_identity = null;
 
-	/** @var array $defaultSettingValues */
-	private static $defaultSettingValues = array(
-		'scripturl'                     => 'https://cdn.annoto.net/widget/latest/bootstrap.js',
-		'locale'                          => 1,
-		'player-type'                     => 'youtube',
-		'sso-secret'                      => '',
-		'api-key'                         => '',
-		'widget-max-width'                => '300',
-		'annoto-player-params'            => '{}',
-        'deploymentDomain'                => 'euregion',
-	);
+    /** @var array $annotoDefaultSettings */
+    public static $annotoDefaultSettings = [
+        [
+            'name' => 'sso-secret',
+            'value' => '',
+            'desc' => "SSO secret is provided by Annoto (keep in secret)",
+            'type' => 'input',
+        ],
+        [
+            'name' => 'api-key',
+            'value' => '',
+            'desc' => "ClientID is provided by Annoto (keep in secret)",
+            'type' => 'input',
+        ],
+        [
+            'name' => 'scripturl',
+            'value' => 'https://cdn.annoto.net/widget/latest/bootstrap.js',
+            'desc' => "Provide Annoto's script URL here",
+            'type' => 'input',
+        ],
+        [
+            'name' => 'locale',
+            'value' => 1,
+            'desc' => "Locale",
+            'type' => 'checkbox',
+        ],
+        [
+            'name' => 'deploymentDomain',
+            'value' => 'euregion',
+            'desc' => "Deployment domain",
+            'type' => 'select',
+        ],
+    ];
 
 	/**
 	 * Init method will initiate all hooks and handle ajax to return settings
@@ -82,9 +104,8 @@ class Annoto {
 				</script>
 				<?php
 		}
-		add_action('wp_head', 'wpb_hook_javascript');
-
-		add_action( 'wp_loaded', static::set_current_user() );
+		add_action( 'wp_head', 'wpb_hook_javascript' );
+		add_action( 'wp_loaded', array( 'Annoto', 'set_current_user' ) );
 		add_filter( 'embed_oembed_html', array( 'Annoto', 'prepare_video_iframe_attributes' ), 10, 3 );
 	}
 
@@ -92,18 +113,18 @@ class Annoto {
 	 * Load all sources
 	 */
 	public static function load_resources() {
-        $settings = get_option( 'annoto_settings' );
 
-		wp_register_script(
-			'annoto-bootstrap.js',
+        $settings = get_option( ANNOTO_SETTING_KEY_NAME );
+        wp_register_script(
+            'annoto-bootstrap.js',
             $settings['scripturl'],
-			array(),
-			ANNOTO_VERSION,
-			true
-		);
-		wp_enqueue_script( 'annoto-bootstrap.js' );
+            array(),
+            ANNOTO_VERSION,
+            true
+        );
+        wp_enqueue_script( 'annoto-bootstrap.js' );
 
-		wp_register_script(
+        wp_register_script(
 			'annoto.js',
 			plugin_dir_url( __FILE__ ) . 'src/js/annoto.js',
 			array( 'jquery' ),
@@ -143,7 +164,7 @@ class Annoto {
 			array_key_exists( 'action', $post )
 			&& 'get-settings' === $post['action']
 		) {
-			$plugin_settings = get_option( 'annoto_settings' );
+			$plugin_settings = get_option( ANNOTO_SETTING_KEY_NAME );
 
 			if ( ! $plugin_settings ) {
 				echo wp_json_encode( array( 'status' => 'failed' ) );
@@ -203,18 +224,6 @@ class Annoto {
 	}
 
 	/**
-	 * Render view by name
-	 *
-	 * @param string $name
-	 */
-	public static function view( $name ) {
-
-		$file = ANNOTO_PLUGIN_DIR . 'views/' . $name . '.php';
-
-		include $file;
-	}
-
-	/**
 	 * Plugin activation handler
 	 */
 	public static function plugin_activation() {
@@ -238,6 +247,22 @@ class Annoto {
 		return delete_option( ANNOTO_SETTING_KEY_NAME );
 	}
 
+
+    /**
+     * get default setting values for plugin
+     *
+     * @return array $defaultSettingValues
+     */
+    public function getDefaultSettingValues() {
+        $defaultSettingValues = [];
+        $allValues = static::$annotoDefaultSettings;
+        foreach ($allValues as $value) {
+            $defaultSettingValues[$value['name']] = $value['value'];
+        }
+
+        return $defaultSettingValues;
+    }
+    
 	/**
 	 * Set default setting values for plugin
 	 *
@@ -245,7 +270,7 @@ class Annoto {
 	 */
     private static function setDefaultSettingsValuesForPlugin() {
         if (!get_option( ANNOTO_SETTING_KEY_NAME )) {
-            return add_option( ANNOTO_SETTING_KEY_NAME, static::$defaultSettingValues, 'no' );
+            return add_option( ANNOTO_SETTING_KEY_NAME, self::getDefaultSettingValues(), 'no' );
         }
         return true;
     }
@@ -308,9 +333,7 @@ class Annoto {
 			'scope'    => ( static::$current_user_identity->caps['administrator'] ? 'super-mod' : 'user' ),
 		);
 
-		$ret = JWT::encode( $payload, $plugin_settings['sso-secret'] );
-
-		return $ret;
+		return JWT::encode( $payload, $plugin_settings['sso-secret'] );
 	}
 
 	/**

@@ -4,150 +4,127 @@
  * Class AnnotoAdmin
  */
 class AnnotoAdmin {
+    private $annoto_options;
 
-	/** @var bool $initiated */
-	private static $initiated = false;
+    public function __construct() {
+        add_action( 'admin_menu', array( $this, 'annoto_add_plugin_page' ) );
+        add_action( 'admin_init', array( $this, 'annoto_page_init' ) );
+    }
 
-	public static $intConfigValueNames = array(
-        'locale',
-		'widget-max-width',
-	);
+    public function annoto_add_plugin_page() {
+        add_options_page(
+            __( 'Annoto', 'annoto' ), // page_title
+            __( 'Annoto', 'annoto' ), // menu_title
+            'manage_options', // capability
+            'annoto-key-config', // menu_slug
+            array( $this, 'annoto_create_admin_page' ) // function
+        );
+    }
 
-	/**
-	 * Init method will initiate all hooks and handle ajax to save settings
-	 */
-	public static function init() {
-		if ( ! self::$initiated ) {
-			self::initHooks();
-		}
+    public function annoto_create_admin_page() {
+        $this->annoto_options = get_option( ANNOTO_SETTING_KEY_NAME ); ?>
 
-		$post = $_POST;
+        <div class="wrap">
+            <h2>Annoto settings</h2>
+            <p></p>
+            <?php  settings_errors('', false, true); ?>
 
-		if (
-			array_key_exists( 'action', $post )
-			&& array_key_exists( 'data', $post )
-			&& $post['action'] === 'save-settings'
-		) {
-			static::saveSettings( $post['data'] );
-		}
-	}
+            <form method="post" action="options.php">
+                <?php
+                settings_fields( 'annoto_options' );
+                do_settings_sections( 'annoto-admin' );
+                submit_button();
+                ?>
+            </form>
+        </div>
+    <?php }
 
-	/**
-	 * All hooks to initialize
-	 */
-	public static function initHooks() {
-		self::$initiated = true;
+    public function annoto_page_init() {
+        $settings = Annoto::$annotoDefaultSettings;
+        
+        register_setting(
+            'annoto_options', // option_group
+            ANNOTO_SETTING_KEY_NAME, // option_name
+            array( $this, 'sanitize_option_annoto_settings' ) // sanitize_callback
+        );
 
-		add_action( 'admin_menu', array( 'AnnotoAdmin', 'loadMenu' ) );
-		add_action( 'admin_enqueue_scripts', array( 'AnnotoAdmin', 'load_resources' ) );
-	}
+        add_settings_section(
+            'annoto_setting_section',
+            '',
+            array( $this, 'annoto_section_info' ),
+            'annoto-admin'
+        );
 
-	/**
-	 * Load menu Annoto in the admin menu side bar
-	 */
-	public static function loadMenu() {
-		add_options_page(
-			__( 'Annoto', 'annoto' ),
-			__( 'Annoto', 'annoto' ),
-			'manage_options',
-			'annoto-key-config',
-			array( 'AnnotoAdmin', 'displaySettingsPage' )
-		);
-	}
+        foreach ($settings as $setting) {
+            add_settings_field(
+                $setting['name'],
+                $setting['desc'],
+                array( $this, 'render_cb' ),
+                'annoto-admin',
+                'annoto_setting_section',
+                ['id' => $setting['name'], 'type' => $setting['type']]
+            );
+        }
+    }
 
-	/**
-	 * Render Settings page
-	 */
-	public static function displaySettingsPage() {
-		Annoto::view( 'settings' );
-	}
+    public function sanitize_option_annoto_settings($input) {
 
-	/**
-	 * Load all sources
-	 */
-	public static function load_resources() {
-		global $hook_suffix;
+        $sanitary_values = array();
+        if ( isset( $input['api-key'] ) ) {
+            $sanitary_values['api-key'] = sanitize_text_field( $input['api-key'] );
+        }
 
-		if (
-			in_array(
-				$hook_suffix,
-				apply_filters( 'annoto_admin_page_hook_suffixes', array( 'settings_page_annoto-key-config' ) ),
-				true
-			)
-		) {
+        if ( isset( $input['sso-secret'] ) ) {
+            $sanitary_values['sso-secret'] = sanitize_text_field( $input['sso-secret'] );
+        }
 
-			wp_register_style(
-				'annoto.css',
-				plugin_dir_url( __FILE__ ) . 'src/styles/annoto.css',
-				array(),
-				ANNOTO_VERSION
-			);
-			wp_enqueue_style( 'annoto.css' );
+        if ( isset( $input['scripturl'] ) ) {
+           if ( esc_url_raw($input['scripturl']) !== $input['scripturl'] ) {
+               $message = __('The URL has been saved but may not be valid, please check it.');
+               add_settings_error(ANNOTO_SETTING_KEY_NAME, ANNOTO_SETTING_KEY_NAME, $message);
+           }
+            $sanitary_values['scripturl'] = esc_url_raw( $input['scripturl'] );
+        }
 
-			wp_register_style(
-				'annoto-bootstrap.css',
-				plugin_dir_url( __FILE__ ) . 'src/styles/annoto-bootstrap.css',
-				array(),
-				ANNOTO_VERSION
-			);
-			wp_enqueue_style( 'annoto-bootstrap.css' );
+        if ( isset( $input['deploymentDomain'] ) ) {
+            $sanitary_values['deploymentDomain'] =  $input['deploymentDomain'] ;
+        }
 
-			wp_register_script(
-				'annoto-admin.js',
-				plugin_dir_url( __FILE__ ) . 'src/js/annoto-admin.js',
-				array( 'jquery' ),
-				ANNOTO_VERSION,
-				true
-			);
-			wp_enqueue_script( 'annoto-admin.js' );
+        if ( isset( $input['locale'] ) ) {
+            $sanitary_values['locale'] =  $input['locale'] ;
+        }
 
-			wp_register_script(
-				'annoto-bootstrap.min.js',
-				'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
-				array( 'jquery' ),
-				ANNOTO_VERSION,
-				true
-			);
-			wp_enqueue_script( 'annoto-bootstrap.min.js' );
-		}
-	}
+        return $sanitary_values;
+    }
 
-	/**
-	 * AJAX handler to save settings
-	 *
-	 * @param array $settingsData
-	 */
-	public static function saveSettings( array $settingsData ) {
+    public function annoto_section_info() {
 
-		$optionSaveStatus = update_option( 'annoto_settings', static::castSettingValueTypes( $settingsData ) );
+    }
 
-		if ( ! $optionSaveStatus ) {
-			echo wp_json_encode( array( 'status' => 'failed' ) );
-			exit();
-		}
+    public function render_cb($attr) {
 
-		echo wp_json_encode(
-			array(
-				'status' => 'success',
-				'data'   => get_option( 'annoto_settings' ),
-			)
-		);
-		exit();
-	}
-
-	/**
-	 * Make type casting for some setting value
-	 *
-	 * @param array $settingData
-	 * @return array
-	 */
-	private static function castSettingValueTypes( array $settingData ) {
-		foreach ( $settingData as $settingName => &$settingValue ) {
-			if ( in_array( $settingName, static::$intConfigValueNames, true ) ) {
-				$settingValue = (int) $settingValue;
-			}
-		}
-
-		return $settingData;
-	}
+        switch ($attr['type']) {
+            case 'input':
+                $options = isset( $this->annoto_options[$attr['id']] ) ? esc_attr( $this->annoto_options[$attr['id']] ) : '';
+                printf(
+                    '<input class="regular-text" type="text" name="annoto_settings['.$attr['id'].']" id="'.$attr['id'].'" value="%s">',
+                    $options
+                );
+                break;
+            case 'checkbox':
+                $options = isset( $this->annoto_options['locale'] ) ? esc_attr( $this->annoto_options['locale']) : 0;
+                printf('<input class="regular-text" type="checkbox" name="annoto_settings['.$attr['id'].']" id="'. $attr['id'] .'" value="1"'. checked( 1, $options, false ));
+                break;
+            case 'select':
+                $options = isset( $this->annoto_options['deploymentDomain'] ) ? esc_attr( $this->annoto_options['deploymentDomain']) : 'euregion';
+                ?>
+                <select name="annoto_settings[deploymentDomain]" id="domain">
+                    <option value = "euregion" <?php selected( $options, 'euregion' ) ?>>EU region</option>
+                    <option value = "usregion" <?php selected( $options, 'usregion' ) ?>>US region</option>
+                    <option value = "custom" <?php selected( $options, 'custom' ) ?>>Custom</option>
+                </select>
+                <?php
+                break;
+        }
+    }
 }
